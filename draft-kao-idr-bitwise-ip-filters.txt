@@ -4,12 +4,13 @@
 
 IDR Working Group                                                 N. Kao
 Internet-Draft                                    Individual Contributor
-Intended status: Standards Track                        19 February 2025
-Expires: 23 August 2025
+Intended status: Standards Track                                S. Hares
+Expires: 21 February 2026                        Hickory Hill Consulting
+                                                          20 August 2025
 
 
                   Bitwise IP Filters for BGP FlowSpec
-                  draft-kao-idr-bitwise-ip-filters-00
+                  draft-kao-idr-bitwise-ip-filters-01
 
 Abstract
 
@@ -33,7 +34,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 August 2025.
+   This Internet-Draft will expire on 21 February 2026.
 
 Copyright Notice
 
@@ -52,10 +53,9 @@ Copyright Notice
 
 
 
-
-Kao                      Expires 23 August 2025                 [Page 1]
+Kao & Hares             Expires 21 February 2026                [Page 1]
 
-Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
+Internet-Draft         FlowSpec Bitwise IP Filters           August 2025
 
 
 Table of Contents
@@ -69,18 +69,17 @@ Table of Contents
      2.3.  Ordering Procedures for the Sub-TLVs  . . . . . . . . . .   5
    3.  Use Cases . . . . . . . . . . . . . . . . . . . . . . . . . .   6
      3.1.  Symmetric Traffic Load Balancing  . . . . . . . . . . . .   6
-     3.2.  Dynamic Service Scaling . . . . . . . . . . . . . . . . .   7
+     3.2.  Dynamic Service Scaling . . . . . . . . . . . . . . . . .   8
    4.  Comparisons with Other Approaches . . . . . . . . . . . . . .   8
      4.1.  Comparison with Existing Prefix Filters . . . . . . . . .   8
-     4.2.  Comparison with the Content Filter  . . . . . . . . . . .   8
+     4.2.  Comparison with the Content Filter  . . . . . . . . . . .   9
      4.3.  Comparison with the Hash-based ECMP . . . . . . . . . . .   9
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   9
-   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
    7.  Normative References  . . . . . . . . . . . . . . . . . . . .  10
-   8.  Informative References  . . . . . . . . . . . . . . . . . . .  10
-   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  11
-   Contributors  . . . . . . . . . . . . . . . . . . . . . . . . . .  11
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  11
+   8.  Informative References  . . . . . . . . . . . . . . . . . . .  11
+   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  12
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
 
 1.  Introduction
 
@@ -109,14 +108,17 @@ Table of Contents
 
 
 
-Kao                      Expires 23 August 2025                 [Page 2]
+
+Kao & Hares             Expires 21 February 2026                [Page 2]
 
-Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
+Internet-Draft         FlowSpec Bitwise IP Filters           August 2025
 
 
    This draft defines the bitwise matching filters for source or
    destination IPv4/IPv6 address fields.  We can achieve dynamic
-   symmetric traffic load-balancing using these filters.
+   symmetric traffic load-balancing using these filters if the traffic
+   is distributed almost uniformly among combinations of the least
+   significant bits of the source or destination address fields.
 
 1.1.  Requirements Language
 
@@ -161,15 +163,14 @@ Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
 
    Component type:  TBD1
 
-   Description:  This component performs matching against designated
 
 
-
-Kao                      Expires 23 August 2025                 [Page 3]
+Kao & Hares             Expires 21 February 2026                [Page 3]
 
-Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
+Internet-Draft         FlowSpec Bitwise IP Filters           August 2025
 
 
+   Description:  This component performs matching against designated
       bits in the destination address field.
 
    The field that the filter targets in the IPv4 Packets:  Destination
@@ -220,10 +221,9 @@ Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
 
 
 
-
-Kao                      Expires 23 August 2025                 [Page 4]
+Kao & Hares             Expires 21 February 2026                [Page 4]
 
-Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
+Internet-Draft         FlowSpec Bitwise IP Filters           August 2025
 
 
       octets.  The length is 8 for AFI = 1(IPv4) and 32 for AFI =
@@ -277,9 +277,9 @@ Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
 
 
 
-Kao                      Expires 23 August 2025                 [Page 5]
+Kao & Hares             Expires 21 February 2026                [Page 5]
 
-Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
+Internet-Draft         FlowSpec Bitwise IP Filters           August 2025
 
 
       2.  Compare the sequence of the Sub-TLV instances from each NLRI
@@ -297,18 +297,23 @@ Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
 
 3.1.  Symmetric Traffic Load Balancing
 
-   Referring to Figure 1, service instances SVC0, SVC1, SVC2, and SVC3
-   need to process both directions of traffic in the same session.  Any
-   single service instance cannot handle the traffic volume alone.
+   Referring to Figure 1, subscriber traffic is going through a set of
+   inline service instances(e.g., DPIs, stateful firewalls) before
+   entering the Internet.  Inline service instances SVC0, SVC1, SVC2,
+   and SVC3 need to process both directions of traffic in the same
+   session.  Any single service instance cannot handle the traffic
+   volume alone.  The traffic is distributed almost uniformly among
+   combinations of the least significant 2 bits of the subscribers'
+   addresses.
 
                     +------+   +--------+   +------+
                     |      |---|  SVC0  |---|      |
                     |      |   +--------+   |      |
                     |      |   +--------+   |      |
-                    |      |---|  SVC1  |---|      |
-                    |Router|   +--------+   |Router|
-                    |  X   |   +--------+   |  Y   |
-                    |      |---|  SVC2  |---|      |
+    +-----------+   |      |---|  SVC1  |---|      |   +-------------+
+    |Subscribers|---|Router|   +--------+   |Router|---| Services on |
+    +-----------+   |  X   |   +--------+   |  Y   |   |  Internet   |
+                    |      |---|  SVC2  |---|      |   +-------------+
                     |      |   +--------+   |      |
                     |      |   +--------+   |      |
                     |      |---|  SVC3  |---|      |
@@ -326,39 +331,37 @@ Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
 
    On X:
 
-   *  FSv2 rule X0 matches the two least significant bits as 00 in the
+
+
+Kao & Hares             Expires 21 February 2026                [Page 6]
+
+Internet-Draft         FlowSpec Bitwise IP Filters           August 2025
+
+
+   *  FSv2 rule X0 matches the least significant 2 bits as 00 in the
       source address field and directs traffic to SVC0.
 
-
-
-
-
-Kao                      Expires 23 August 2025                 [Page 6]
-
-Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
-
-
-   *  FSv2 rule X1 matches the two least significant bits as 01 in the
+   *  FSv2 rule X1 matches the least significant 2 bits as 01 in the
       source address field and directs traffic to SVC1.
 
-   *  FSv2 rule X2 matches the two least significant bits as 10 in the
+   *  FSv2 rule X2 matches the least significant 2 bits as 10 in the
       source address field and directs traffic to SVC2.
 
-   *  FSv2 rule X3 matches the two least significant bits as 11 in the
+   *  FSv2 rule X3 matches the least significant 2 bits as 11 in the
       source address field and directs traffic to SVC3.
 
    On Y:
 
-   *  FSv2 rule Y0 matches the two least significant bits as 00 in the
+   *  FSv2 rule Y0 matches the least significant 2 bits as 00 in the
       destination address field and directs traffic to SVC0.
 
-   *  FSv2 rule Y1 matches the two least significant bits as 01 in the
+   *  FSv2 rule Y1 matches the least significant 2 bits as 01 in the
       destination address field and directs traffic to SVC1.
 
-   *  FSv2 rule Y2 matches the two least significant bits as 10 in the
+   *  FSv2 rule Y2 matches the least significant 2 bits as 10 in the
       destination address field and directs traffic to SVC2.
 
-   *  FSv2 rule Y3 matches the two least significant bits as 11 in the
+   *  FSv2 rule Y3 matches the least significant 2 bits as 11 in the
       destination address field and directs traffic to SVC3.
 
    The matched traffic is directed to a specific service instance by
@@ -375,8 +378,21 @@ Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
    *  Redirect into an SR Policy as described in
       [I-D.ietf-idr-ts-flowspec-srv6-policy]
 
-   We can load balance while keeping the traffic of the same session on
-   the same service instance using these rules.
+   We can load balance the traffic to N service instances while keeping
+   the same session on the same instance using the rules matching the
+   least significant log(N) bits of the address fields.
+
+
+
+
+
+
+
+
+Kao & Hares             Expires 21 February 2026                [Page 7]
+
+Internet-Draft         FlowSpec Bitwise IP Filters           August 2025
+
 
 3.2.  Dynamic Service Scaling
 
@@ -385,14 +401,6 @@ Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
    SVC3 to reduce costs, we can deploy new rules:
 
    On X:
-
-
-
-
-Kao                      Expires 23 August 2025                 [Page 7]
-
-Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
-
 
    *  FSv2 rule X0 matches the least significant bit as 0 in the source
       address field and directs traffic to SVC0.
@@ -418,19 +426,29 @@ Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
 
 4.1.  Comparison with Existing Prefix Filters
 
-   In [RFC8955], [RFC8956], and [I-D.ietf-idr-fsv2-ip-basic] only IPv4/
-   IPv6 longest-prefix-matching(LPM) filters(Sub-TLV Type 1 and 2) are
-   defined, which cannot match discontiguous bits.  These filters may
+   IPv4 Source/Destination Prefix filters defined in [RFC8955] and
+   [I-D.ietf-idr-fsv2-ip-basic] cannot match the least significant bits.
+   IPv6 Source/Destination Prefix filters defined in  [RFC8956]
+   and [I-D.ietf-idr-fsv2-ip-basic] can either match the least
+   significant bits or the IPv6 Prefix, but not both.  These filters may
    not be suitable for use cases described in Section 3.1 without real-
    time traffic monitoring mechanisms for every possible source/
    destination prefix.  The manageability and flexibility are not as
    good as the proposed solution either.
 
-   If both the LPM and bitwise matching are needed, using the bitwise
+   If both the prefix and bitwise matching are needed, using the bitwise
    matching filter is recommended since it provides both functionalities
-   in the same filter.  If only LPM is needed, using filters defined in
-   [RFC8955], [RFC8956], or [I-D.ietf-idr-fsv2-ip-basic] is more
-   efficient and recommended.
+   in the same filter.  If only prefix matching is required, using
+   filters defined in [RFC8955], [RFC8956],
+   or [I-D.ietf-idr-fsv2-ip-basic] is more efficient and recommended.
+
+
+
+
+Kao & Hares             Expires 21 February 2026                [Page 8]
+
+Internet-Draft         FlowSpec Bitwise IP Filters           August 2025
+
 
 4.2.  Comparison with the Content Filter
 
@@ -440,15 +458,6 @@ Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
    matching is not its primary design goal.  Manual calculation of
    offsets is required to use this filter.  Therefore, it may not be
    suitable for scenarios that match address fields only.
-
-
-
-
-
-Kao                      Expires 23 August 2025                 [Page 8]
-
-Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
-
 
 4.3.  Comparison with the Hash-based ECMP
 
@@ -463,13 +472,13 @@ Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
       directions.
 
    *  A mechanism to signal the order of ECMP members is needed.  The
-      BGP MultiNexhop(MNH) attribute defined in
+      BGP MultiNexthop(MNH) attribute defined in
       [I-D.ietf-idr-multinexthop-attribute] can distribute such
       information.
 
    Even with all conditions met, we cannot determine which member a
-   specific packet passes through unless the router provides an
-   interface to query that.
+   specific packet passes through before putting it into the router
+   unless the router provides an interface to query that.
 
    Therefore, the bitwise matching filter-based solution is more
    suitable for this scenario.
@@ -479,6 +488,23 @@ Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
    IANA is requested to indicate [this draft] as a reference on the
    following assignments in the Flow Specification Component Types
    Registry:
+
+
+
+
+
+
+
+
+
+
+
+
+
+Kao & Hares             Expires 21 February 2026                [Page 9]
+
+Internet-Draft         FlowSpec Bitwise IP Filters           August 2025
+
 
      +=======+=====================+=====================+===========+
      | Type  | IPv4 Name           | IPv6 Name           | Reference |
@@ -497,14 +523,6 @@ Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
 
    No new security issues are introduced to the BGP protocol by this
    specification.
-
-
-
-
-Kao                      Expires 23 August 2025                 [Page 9]
-
-Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
-
 
 7.  Normative References
 
@@ -535,6 +553,15 @@ Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
               <https://datatracker.ietf.org/doc/html/draft-ietf-idr-
               fsv2-ip-basic-03>.
 
+
+
+
+
+Kao & Hares             Expires 21 February 2026               [Page 10]
+
+Internet-Draft         FlowSpec Bitwise IP Filters           August 2025
+
+
    [I-D.hares-idr-fsv2-more-ip-filters]
               Hares, S., "BGP Flow Specification Version 2 - More IP
               Filters", Work in Progress, Internet-Draft, draft-hares-
@@ -547,20 +574,6 @@ Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
               C", ISO/IEC 9899:2018, June 2018.
 
 8.  Informative References
-
-
-
-
-
-
-
-
-
-
-Kao                      Expires 23 August 2025                [Page 10]
-
-Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
-
 
    [I-D.ietf-idr-flowspec-redirect-ip]
               Uttaro, J., Haas, J., akarch@cisco.com, Ray, S.,
@@ -592,6 +605,19 @@ Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
               <https://datatracker.ietf.org/doc/html/draft-cui-idr-
               content-filter-flowspec-03>.
 
+
+
+
+
+
+
+
+
+Kao & Hares             Expires 21 February 2026               [Page 11]
+
+Internet-Draft         FlowSpec Bitwise IP Filters           August 2025
+
+
    [I-D.ietf-idr-multinexthop-attribute]
               Vairavakkalai, K., Jeganathan, J. M., Nanduri, M., and A.
               R. Lingala, "BGP MultiNexthop Attribute", Work in
@@ -602,27 +628,23 @@ Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
 
 Acknowledgements
 
-   TBD
+   The authors would like to thank Robert Raszuk for comments and
+   suggestions.
 
-Contributors
-
-   TBD
-
-Author's Address
-
-
-
-
-Kao                      Expires 23 August 2025                [Page 11]
-
-Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
-
+Authors' Addresses
 
    Nat Kao
    Individual Contributor
    Email: pyxislx@gmail.com
 
 
+   Susan Hares
+   Hickory Hill Consulting
+   7453 Hickory Hill
+   Saline, MI 48176
+   United States of America
+   Phone: +1-734-604-0332
+   Email: shares@ndzh.com
 
 
 
@@ -647,26 +669,4 @@ Internet-Draft         FlowSpec Bitwise IP Filters         February 2025
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Kao                      Expires 23 August 2025                [Page 12]
+Kao & Hares             Expires 21 February 2026               [Page 12]

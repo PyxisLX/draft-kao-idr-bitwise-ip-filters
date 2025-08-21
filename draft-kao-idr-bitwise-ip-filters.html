@@ -6,6 +6,7 @@
 <meta content="initial-scale=1.0" name="viewport">
 <title>Bitwise IP Filters for BGP FlowSpec</title>
 <meta content="Nat Kao" name="author">
+<meta content="Susan Hares" name="author">
 <meta content="
        
         This draft introduces the bitwise matching filters for source or destination IPv4/IPv6 address fields. These filters enhance
@@ -18,7 +19,7 @@
 <meta content="I-D" name="keyword">
 <meta content="Internet-Draft" name="keyword">
 <meta content="Bitwise IP Filters, BGP FlowSpec" name="keyword">
-<meta content="draft-kao-idr-bitwise-ip-filters-00" name="ietf.draft">
+<meta content="draft-kao-idr-bitwise-ip-filters-01" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.23.0
     Python 3.13.5
@@ -1217,11 +1218,11 @@ li > p:last-of-type:only-child {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">FlowSpec Bitwise IP Filters</td>
-<td class="right">February 2025</td>
+<td class="right">August 2025</td>
 </tr></thead>
 <tfoot><tr>
-<td class="left">Kao</td>
-<td class="center">Expires 23 August 2025</td>
+<td class="left">Kao &amp; Hares</td>
+<td class="center">Expires 21 February 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1231,20 +1232,24 @@ li > p:last-of-type:only-child {
 <dt class="label-workgroup">Workgroup:</dt>
 <dd class="workgroup">IDR Working Group</dd>
 <dt class="label-internet-draft">Internet-Draft:</dt>
-<dd class="internet-draft">draft-kao-idr-bitwise-ip-filters-00</dd>
+<dd class="internet-draft">draft-kao-idr-bitwise-ip-filters-01</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-02-19" class="published">19 February 2025</time>
+<time datetime="2025-08-20" class="published">20 August 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-08-23">23 August 2025</time></dd>
-<dt class="label-authors">Author:</dt>
+<dd class="expires"><time datetime="2026-02-21">21 February 2026</time></dd>
+<dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
       <div class="author-name">N. Kao</div>
 <div class="org">Individual Contributor</div>
+</div>
+<div class="author">
+      <div class="author-name">S. Hares</div>
+<div class="org">Hickory Hill Consulting</div>
 </div>
 </dd>
 </dl>
@@ -1275,7 +1280,7 @@ li > p:last-of-type:only-child {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 23 August 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 21 February 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1370,10 +1375,7 @@ li > p:last-of-type:only-child {
             <p id="section-toc.1-1.9.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgements" class="internal xref">Acknowledgements</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-contributors" class="internal xref">Contributors</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+            <p id="section-toc.1-1.10.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1399,8 +1401,9 @@ li > p:last-of-type:only-child {
         The Extended IP Filters defined in <span>[<a href="#I-D.hares-idr-fsv2-more-ip-filters" class="cite xref">I-D.hares-idr-fsv2-more-ip-filters</a>]</span>
         further extend the filter types of FSv2.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">
-        This draft defines the bitwise matching filters for source or destination IPv4/IPv6 address fields. We can achieve dynamic
-        symmetric traffic load-balancing using these filters.<a href="#section-1-4" class="pilcrow">¶</a></p>
+        This draft defines the bitwise matching filters for source or destination IPv4/IPv6 address fields. We can achieve dynamic symmetric
+        traffic load-balancing using these filters if the traffic is distributed almost uniformly among combinations of the least
+        significant bits of the source or destination address fields.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <div id="requirements">
 <section id="section-1.1">
         <h3 id="name-requirements-language">
@@ -1652,8 +1655,11 @@ li > p:last-of-type:only-child {
         </h3>
 <p id="section-3.1-1">
           Referring to <a href="#symmetric-load-balancing" class="auto internal xref">Figure 1</a>, 
-          service instances SVC0, SVC1, SVC2, and SVC3 need to process both directions of traffic in the same session.
-          Any single service instance cannot handle the traffic volume alone.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+          subscriber traffic is going through a set of inline service instances(e.g., DPIs, stateful firewalls)
+          before entering the Internet.
+          Inline service instances SVC0, SVC1, SVC2, and SVC3 need to process both directions of traffic in the same session.
+          Any single service instance cannot handle the traffic volume alone.
+          The traffic is distributed almost uniformly among combinations of the least significant 2 bits of the subscribers' addresses.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <span id="name-symmetric-traffic-load-balan"></span><div id="symmetric-load-balancing">
 <figure id="figure-1">
           <div class="alignLeft art-ascii-art art-text artwork" id="section-3.1-2.1">
@@ -1663,10 +1669,10 @@ li > p:last-of-type:only-child {
                  |      |---|  SVC0  |---|      |
                  |      |   +--------+   |      |
                  |      |   +--------+   |      |
-                 |      |---|  SVC1  |---|      |
-                 |Router|   +--------+   |Router|
-                 |  X   |   +--------+   |  Y   |
-                 |      |---|  SVC2  |---|      |
+ +-----------+   |      |---|  SVC1  |---|      |   +-------------+
+ |Subscribers|---|Router|   +--------+   |Router|---| Services on |
+ +-----------+   |  X   |   +--------+   |  Y   |   |  Internet   |
+                 |      |---|  SVC2  |---|      |   +-------------+
                  |      |   +--------+   |      |
                  |      |   +--------+   |      |
                  |      |---|  SVC3  |---|      |
@@ -1687,32 +1693,32 @@ li > p:last-of-type:only-child {
             On X:<a href="#section-3.1-5" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1-6.1">
-              FSv2 rule X0 matches the two least significant bits as 00 in the source address field and directs traffic to SVC0.<a href="#section-3.1-6.1" class="pilcrow">¶</a>
+              FSv2 rule X0 matches the least significant 2 bits as 00 in the source address field and directs traffic to SVC0.<a href="#section-3.1-6.1" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-3.1-6.2">
-              FSv2 rule X1 matches the two least significant bits as 01 in the source address field and directs traffic to SVC1.<a href="#section-3.1-6.2" class="pilcrow">¶</a>
+              FSv2 rule X1 matches the least significant 2 bits as 01 in the source address field and directs traffic to SVC1.<a href="#section-3.1-6.2" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-3.1-6.3">
-              FSv2 rule X2 matches the two least significant bits as 10 in the source address field and directs traffic to SVC2.<a href="#section-3.1-6.3" class="pilcrow">¶</a>
+              FSv2 rule X2 matches the least significant 2 bits as 10 in the source address field and directs traffic to SVC2.<a href="#section-3.1-6.3" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-3.1-6.4">
-              FSv2 rule X3 matches the two least significant bits as 11 in the source address field and directs traffic to SVC3.<a href="#section-3.1-6.4" class="pilcrow">¶</a>
+              FSv2 rule X3 matches the least significant 2 bits as 11 in the source address field and directs traffic to SVC3.<a href="#section-3.1-6.4" class="pilcrow">¶</a>
 </li>
         </ul>
 <p id="section-3.1-7">
             On Y:<a href="#section-3.1-7" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1-8.1">
-              FSv2 rule Y0 matches the two least significant bits as 00 in the destination address field and directs traffic to SVC0.<a href="#section-3.1-8.1" class="pilcrow">¶</a>
+              FSv2 rule Y0 matches the least significant 2 bits as 00 in the destination address field and directs traffic to SVC0.<a href="#section-3.1-8.1" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-3.1-8.2">
-              FSv2 rule Y1 matches the two least significant bits as 01 in the destination address field and directs traffic to SVC1.<a href="#section-3.1-8.2" class="pilcrow">¶</a>
+              FSv2 rule Y1 matches the least significant 2 bits as 01 in the destination address field and directs traffic to SVC1.<a href="#section-3.1-8.2" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-3.1-8.3">
-              FSv2 rule Y2 matches the two least significant bits as 10 in the destination address field and directs traffic to SVC2.<a href="#section-3.1-8.3" class="pilcrow">¶</a>
+              FSv2 rule Y2 matches the least significant 2 bits as 10 in the destination address field and directs traffic to SVC2.<a href="#section-3.1-8.3" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-3.1-8.4">
-              FSv2 rule Y3 matches the two least significant bits as 11 in the destination address field and directs traffic to SVC3.<a href="#section-3.1-8.4" class="pilcrow">¶</a>
+              FSv2 rule Y3 matches the least significant 2 bits as 11 in the destination address field and directs traffic to SVC3.<a href="#section-3.1-8.4" class="pilcrow">¶</a>
 </li>
         </ul>
 <p id="section-3.1-9">
@@ -1733,7 +1739,8 @@ li > p:last-of-type:only-child {
 </li>
         </ul>
 <p id="section-3.1-11">
-            We can load balance while keeping the traffic of the same session on the same service instance using these rules.<a href="#section-3.1-11" class="pilcrow">¶</a></p>
+            We can load balance the traffic to N service instances while keeping the same session on the same instance using the rules
+            matching the least significant log(N) bits of the address fields.<a href="#section-3.1-11" class="pilcrow">¶</a></p>
 </section>
 </div>
 <section id="section-3.2">
@@ -1779,18 +1786,21 @@ li > p:last-of-type:only-child {
 <a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-comparison-with-existing-pr" class="section-name selfRef">Comparison with Existing Prefix Filters</a>
         </h3>
 <p id="section-4.1-1">
-          In
-          <span>[<a href="#RFC8955" class="cite xref">RFC8955</a>]</span>, <span>[<a href="#RFC8956" class="cite xref">RFC8956</a>]</span>, and <span>[<a href="#I-D.ietf-idr-fsv2-ip-basic" class="cite xref">I-D.ietf-idr-fsv2-ip-basic</a>]</span>
-          only IPv4/IPv6 longest-prefix-matching(LPM) filters(Sub-TLV Type 1 and 2) are defined, which cannot match discontiguous bits.
-          These filters may not be suitable for use cases described in
-          <a href="#symmetric-load-balancing-section" class="auto internal xref">Section 3.1</a>
-          without real-time traffic monitoring mechanisms for every possible source/destination prefix.
-          The manageability and flexibility are not as good as the proposed solution either.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+          IPv4 Source/Destination Prefix filters defined in
+          <span>[<a href="#RFC8955" class="cite xref">RFC8955</a>]</span>
+          and <span>[<a href="#I-D.ietf-idr-fsv2-ip-basic" class="cite xref">I-D.ietf-idr-fsv2-ip-basic</a>]</span>
+          cannot match the least significant bits.
+          IPv6 Source/Destination Prefix filters defined in 
+          <span>[<a href="#RFC8956" class="cite xref">RFC8956</a>]</span>
+          and <span>[<a href="#I-D.ietf-idr-fsv2-ip-basic" class="cite xref">I-D.ietf-idr-fsv2-ip-basic</a>]</span>
+          can either match the least significant bits or the IPv6 Prefix, but not both.
+          These filters may not be suitable for use cases described in Section 3.1 without real-time traffic monitoring mechanisms for every
+          possible source/destination prefix. The manageability and flexibility are not as good as the proposed solution either.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.1-2">
-          If both the LPM and bitwise matching are needed,
-          using the bitwise matching filter is recommended since it provides both functionalities in the same filter.
-          If only LPM is needed, using filters defined in
-          <span>[<a href="#RFC8955" class="cite xref">RFC8955</a>]</span>, <span>[<a href="#RFC8956" class="cite xref">RFC8956</a>]</span>, or <span>[<a href="#I-D.ietf-idr-fsv2-ip-basic" class="cite xref">I-D.ietf-idr-fsv2-ip-basic</a>]</span>
+          If both the prefix and bitwise matching are needed, using the bitwise matching filter is recommended since it provides both
+          functionalities in the same filter.
+          If only prefix matching is required, using filters defined in
+          <span>[<a href="#RFC8955" class="cite xref">RFC8955</a>]</span>, <span>[<a href="#RFC8956" class="cite xref">RFC8956</a>]</span>, or <span>[<a href="#I-D.ietf-idr-fsv2-ip-basic" class="cite xref">I-D.ietf-idr-fsv2-ip-basic</a>]</span>
           is more efficient and recommended.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
 </section>
 <section id="section-4.2">
@@ -1822,14 +1832,14 @@ li > p:last-of-type:only-child {
 </li>
           <li class="normal" id="section-4.3-2.3">
             A mechanism to signal the order of ECMP members is needed.
-            The BGP MultiNexhop(MNH) attribute defined in
+            The BGP MultiNexthop(MNH) attribute defined in
             <span>[<a href="#I-D.ietf-idr-multinexthop-attribute" class="cite xref">I-D.ietf-idr-multinexthop-attribute</a>]</span>
             can distribute such information.<a href="#section-4.3-2.3" class="pilcrow">¶</a>
 </li>
         </ul>
 <p id="section-4.3-3">
-          Even with all conditions met, we cannot determine which member a specific packet passes through unless the router provides an
-          interface to query that.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
+          Even with all conditions met, we cannot determine which member a specific packet passes through 
+          before putting it into the router unless the router provides an interface to query that.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
 <p id="section-4.3-4">
           Therefore, the bitwise matching filter-based solution is more suitable for this scenario.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
 </section>
@@ -1946,21 +1956,14 @@ li > p:last-of-type:only-child {
       <h2 id="name-acknowledgements">
 <a href="#name-acknowledgements" class="section-name selfRef">Acknowledgements</a>
       </h2>
-<p id="appendix-A-1">TBD<a href="#appendix-A-1" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="Contributors">
-<section id="appendix-B">
-      <h2 id="name-contributors">
-<a href="#name-contributors" class="section-name selfRef">Contributors</a>
-      </h2>
-<p id="appendix-B-1">TBD<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-1">
+        The authors would like to thank Robert Raszuk for comments and suggestions.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">
-<section id="appendix-C">
-      <h2 id="name-authors-address">
-<a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
+<section id="appendix-B">
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
       </h2>
 <address class="vcard">
         <div dir="auto" class="left"><span class="fn nameRole">Nat Kao</span></div>
@@ -1968,6 +1971,23 @@ li > p:last-of-type:only-child {
 <div class="email">
 <span>Email:</span>
 <a href="mailto:pyxislx@gmail.com" class="email">pyxislx@gmail.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Susan Hares</span></div>
+<div dir="auto" class="left"><span class="org">Hickory Hill Consulting</span></div>
+<div dir="auto" class="left"><span class="street-address">7453 Hickory Hill</span></div>
+<div dir="auto" class="left">
+<span class="locality">Saline</span>, <span class="region">MI</span> <span class="postal-code">48176</span>
+</div>
+<div dir="auto" class="left"><span class="country-name">United States of America</span></div>
+<div class="tel">
+<span>Phone:</span>
+<a href="tel:+1-734-604-0332" class="tel">+1-734-604-0332</a>
+</div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:shares@ndzh.com" class="email">shares@ndzh.com</a>
 </div>
 </address>
 </section>

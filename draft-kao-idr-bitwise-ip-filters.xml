@@ -1,53 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-model href="rfc7991bis.rnc"?>
-<!DOCTYPE rfc [
-<!ENTITY RFC0791 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.0791.xml">
-<!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
-<!ENTITY RFC3032 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3032.xml">
-<!ENTITY RFC4271 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4271.xml">
-<!ENTITY RFC4360 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4360.xml">
-<!ENTITY RFC4760 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4760.xml">
-<!ENTITY RFC5065 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5065.xml">
-<!ENTITY RFC5701 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5701.xml">
-<!ENTITY RFC6241 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6241.xml">
-<!ENTITY RFC6482 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6482.xml">
-<!ENTITY RFC7153 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7153.xml">
-<!ENTITY RFC7606 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7606.xml">
-<!ENTITY RFC8040 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8040.xml">
-<!ENTITY RFC8174 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml">
-<!ENTITY RFC8205 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8205.xml">
-<!ENTITY RFC8206 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8206.xml">
-<!ENTITY RFC8300 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8300.xml">
-<!ENTITY RFC8402 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8402.xml">
-<!ENTITY RFC8955 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8955.xml">
-<!ENTITY RFC8956 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8956.xml">
-<!ENTITY RFC9015 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.9015.xml">
-<!ENTITY RFC9117 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.9117.xml">
-<!ENTITY RFC9184 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.9184.xml">
-<!ENTITY RFC9582 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.9582.xml">
-<!ENTITY I-D.ietf-idr-flowspec-v2 SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-idr-flowspec-v2.xml">
-<!ENTITY I-D.ietf-idr-fsv2-ip-basic SYSTEM "https://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-idr-fsv2-ip-basic.xml">
-<!ENTITY I-D.hares-idr-fsv2-more-ip-filters SYSTEM "https://xml.resource.org/public/rfc/bibxml3/reference.I-D.hares-idr-fsv2-more-ip-filters.xml">
-<!ENTITY I-D.hares-idr-fsv2-more-ip-actions SYSTEM "https://xml.resource.org/public/rfc/bibxml3/reference.I-D.hares-idr-fsv2-more-ip-actions.xml">
-<!ENTITY I-D.ietf-idr-flowspec-redirect-ip SYSTEM "https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-flowspec-redirect-ip.xml">
-<!ENTITY I-D.ietf-idr-flowspec-path-redirect SYSTEM "https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-flowspec-path-redirect.xml">
-<!ENTITY I-D.ietf-idr-ts-flowspec-srv6-policy SYSTEM "https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-ts-flowspec-srv6-policy.xml">
-<!ENTITY I-D.cui-idr-content-filter-flowspec SYSTEM "https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.cui-idr-content-filter-flowspec.xml">
-<!ENTITY I-D.ietf-idr-multinexthop-attribute SYSTEM "https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-multinexthop-attribute.xml">
-]>
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-kao-idr-bitwise-ip-filters-00" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" consensus="true" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-kao-idr-bitwise-ip-filters-01" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" consensus="true" version="3">
   <front>
     <title abbrev="FlowSpec Bitwise IP Filters">
       Bitwise IP Filters for BGP FlowSpec
     </title>
-    <seriesInfo name="Internet-Draft" value="draft-kao-idr-bitwise-ip-filters-00"/>
+    <seriesInfo name="Internet-Draft" value="draft-kao-idr-bitwise-ip-filters-01"/>
     <author fullname="Nat Kao" initials="N" surname="Kao">
       <organization>Individual Contributor</organization>
       <address>
         <email>pyxislx@gmail.com</email>
       </address>
     </author>
-    <date day="19" month="02" year="2025"/>
+    <author fullname="Susan Hares" initials="S" surname="Hares">
+      <organization>Hickory Hill Consulting</organization>
+      <address>
+        <postal>
+          <street>7453 Hickory Hill</street>
+          <city>Saline</city>
+          <region>MI</region>
+          <code>48176</code>
+          <country>USA</country>
+        </postal>
+        <phone>+1-734-604-0332</phone>
+        <email>shares@ndzh.com</email>
+      </address>
+    </author>
+    <date day="20" month="08" year="2025"/>
     <area>Routing Area</area>
     <workgroup>IDR Working Group</workgroup>
     <keyword>RFC</keyword>
@@ -85,8 +64,9 @@
         further extend the filter types of FSv2.
       </t>
       <t>
-        This draft defines the bitwise matching filters for source or destination IPv4/IPv6 address fields. We can achieve dynamic
-        symmetric traffic load-balancing using these filters.
+        This draft defines the bitwise matching filters for source or destination IPv4/IPv6 address fields. We can achieve dynamic symmetric
+        traffic load-balancing using these filters if the traffic is distributed almost uniformly among combinations of the least
+        significant bits of the source or destination address fields.
       </t>
       <section title="Requirements Language" anchor="requirements">
         <t>
@@ -268,8 +248,11 @@
       <section title="Symmetric Traffic Load Balancing" anchor="symmetric-load-balancing-section">
         <t>
           Referring to <xref target="symmetric-load-balancing"/>, 
-          service instances SVC0, SVC1, SVC2, and SVC3 need to process both directions of traffic in the same session.
+          subscriber traffic is going through a set of inline service instances(e.g., DPIs, stateful firewalls)
+          before entering the Internet.
+          Inline service instances SVC0, SVC1, SVC2, and SVC3 need to process both directions of traffic in the same session.
           Any single service instance cannot handle the traffic volume alone.
+          The traffic is distributed almost uniformly among combinations of the least significant 2 bits of the subscribers' addresses.
         </t>
           <figure title="Symmetric Traffic Load Balancing Between Routers" anchor="symmetric-load-balancing">
             <artwork type="ascii-art">
@@ -278,10 +261,10 @@
                  |      |---|  SVC0  |---|      |
                  |      |   +--------+   |      |
                  |      |   +--------+   |      |
-                 |      |---|  SVC1  |---|      |
-                 |Router|   +--------+   |Router|
-                 |  X   |   +--------+   |  Y   |
-                 |      |---|  SVC2  |---|      |
+ +-----------+   |      |---|  SVC1  |---|      |   +-------------+
+ |Subscribers|---|Router|   +--------+   |Router|---| Services on |
+ +-----------+   |  X   |   +--------+   |  Y   |   |  Internet   |
+                 |      |---|  SVC2  |---|      |   +-------------+
                  |      |   +--------+   |      |
                  |      |   +--------+   |      |
                  |      |---|  SVC3  |---|      |
@@ -301,16 +284,16 @@
           </t>
           <ul spacing="normal">
             <li>
-              FSv2 rule X0 matches the two least significant bits as 00 in the source address field and directs traffic to SVC0.
+              FSv2 rule X0 matches the least significant 2 bits as 00 in the source address field and directs traffic to SVC0.
             </li>
             <li>
-              FSv2 rule X1 matches the two least significant bits as 01 in the source address field and directs traffic to SVC1.
+              FSv2 rule X1 matches the least significant 2 bits as 01 in the source address field and directs traffic to SVC1.
             </li>
             <li>
-              FSv2 rule X2 matches the two least significant bits as 10 in the source address field and directs traffic to SVC2.
+              FSv2 rule X2 matches the least significant 2 bits as 10 in the source address field and directs traffic to SVC2.
             </li>
             <li>
-              FSv2 rule X3 matches the two least significant bits as 11 in the source address field and directs traffic to SVC3.
+              FSv2 rule X3 matches the least significant 2 bits as 11 in the source address field and directs traffic to SVC3.
             </li>
           </ul>
           <t>
@@ -318,16 +301,16 @@
           </t>
           <ul spacing="normal">
             <li>
-              FSv2 rule Y0 matches the two least significant bits as 00 in the destination address field and directs traffic to SVC0.
+              FSv2 rule Y0 matches the least significant 2 bits as 00 in the destination address field and directs traffic to SVC0.
             </li>
             <li>
-              FSv2 rule Y1 matches the two least significant bits as 01 in the destination address field and directs traffic to SVC1.
+              FSv2 rule Y1 matches the least significant 2 bits as 01 in the destination address field and directs traffic to SVC1.
             </li>
             <li>
-              FSv2 rule Y2 matches the two least significant bits as 10 in the destination address field and directs traffic to SVC2.
+              FSv2 rule Y2 matches the least significant 2 bits as 10 in the destination address field and directs traffic to SVC2.
             </li>
             <li>
-              FSv2 rule Y3 matches the two least significant bits as 11 in the destination address field and directs traffic to SVC3.
+              FSv2 rule Y3 matches the least significant 2 bits as 11 in the destination address field and directs traffic to SVC3.
             </li>
           </ul>
           <t>
@@ -349,7 +332,8 @@
             </li>
           </ul>
           <t>
-            We can load balance while keeping the traffic of the same session on the same service instance using these rules.
+            We can load balance the traffic to N service instances while keeping the same session on the same instance using the rules
+            matching the least significant log(N) bits of the address fields.
           </t>
       </section>
       <section title="Dynamic Service Scaling">
@@ -391,19 +375,22 @@
       </t>
       <section title="Comparison with Existing Prefix Filters">
         <t>
-          In
-          <xref target="RFC8955"/>, <xref target="RFC8956"/>, and <xref target="I-D.ietf-idr-fsv2-ip-basic"/>
-          only IPv4/IPv6 longest-prefix-matching(LPM) filters(Sub-TLV Type 1 and 2) are defined, which cannot match discontiguous bits.
-          These filters may not be suitable for use cases described in
-          <xref target="symmetric-load-balancing-section"/>
-          without real-time traffic monitoring mechanisms for every possible source/destination prefix.
-          The manageability and flexibility are not as good as the proposed solution either.
+          IPv4 Source/Destination Prefix filters defined in
+          <xref target="RFC8955"/>
+          and <xref target="I-D.ietf-idr-fsv2-ip-basic"/>
+          cannot match the least significant bits.
+          IPv6 Source/Destination Prefix filters defined in 
+          <xref target="RFC8956"/>
+          and <xref target="I-D.ietf-idr-fsv2-ip-basic"/>
+          can either match the least significant bits or the IPv6 Prefix, but not both.
+          These filters may not be suitable for use cases described in Section 3.1 without real-time traffic monitoring mechanisms for every
+          possible source/destination prefix. The manageability and flexibility are not as good as the proposed solution either.
         </t>
         <t>
-          If both the LPM and bitwise matching are needed,
-          using the bitwise matching filter is recommended since it provides both functionalities in the same filter.
-          If only LPM is needed, using filters defined in
-          <xref target="RFC8955"/>, <xref target="RFC8956"/>, or <xref target="I-D.ietf-idr-fsv2-ip-basic"/>
+          If both the prefix and bitwise matching are needed, using the bitwise matching filter is recommended since it provides both
+          functionalities in the same filter.
+          If only prefix matching is required, using filters defined in
+          <xref target="RFC8955"/>, <xref target="RFC8956"/>, or <xref target="I-D.ietf-idr-fsv2-ip-basic"/>
           is more efficient and recommended.
         </t>
       </section>
@@ -432,14 +419,14 @@
           </li>
           <li>
             A mechanism to signal the order of ECMP members is needed.
-            The BGP MultiNexhop(MNH) attribute defined in
+            The BGP MultiNexthop(MNH) attribute defined in
             <xref target="I-D.ietf-idr-multinexthop-attribute"/>
             can distribute such information.
           </li>
         </ul>
         <t>
-          Even with all conditions met, we cannot determine which member a specific packet passes through unless the router provides an
-          interface to query that.
+          Even with all conditions met, we cannot determine which member a specific packet passes through 
+          before putting it into the router unless the router provides an interface to query that.
         </t>
         <t>
           Therefore, the bitwise matching filter-based solution is more suitable for this scenario.
@@ -487,12 +474,12 @@
 
   <back>
     <references title="Normative References">
-      &RFC2119;
-      &RFC8174;
-      &RFC8955;
-      &RFC8956;
-      &I-D.ietf-idr-fsv2-ip-basic;
-      &I-D.hares-idr-fsv2-more-ip-filters;
+      <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
+      <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
+      <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8955.xml"/>
+      <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8956.xml"/>
+      <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-fsv2-ip-basic.xml"/>
+      <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.hares-idr-fsv2-more-ip-filters.xml"/>
       <reference anchor="ISO_IEC_9899" quoteTitle="true" derivedAnchor="ISO_IEC_9899">
         <front>
           <title>Information technology -- Programming languages -- C</title>
@@ -507,20 +494,16 @@
       </reference>
     </references>
     <references title="Informative References">
-      &I-D.ietf-idr-flowspec-redirect-ip;
-      &I-D.ietf-idr-flowspec-path-redirect;
-      &I-D.ietf-idr-ts-flowspec-srv6-policy;
-      &I-D.cui-idr-content-filter-flowspec;
-      &I-D.ietf-idr-multinexthop-attribute;
+      <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-flowspec-redirect-ip.xml"/>
+      <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-flowspec-path-redirect.xml"/>
+      <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-ts-flowspec-srv6-policy.xml"/>
+      <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.cui-idr-content-filter-flowspec.xml"/>
+      <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-multinexthop-attribute.xml"/>
     </references>
-    
     <section title="Acknowledgements" anchor="Acknowledgements" numbered="false">
-      <t>TBD</t>
+      <t>
+        The authors would like to thank Robert Raszuk for comments and suggestions.
+      </t>
     </section>
-    
-    <section title="Contributors" anchor="Contributors" numbered="false">
-      <t>TBD</t>
-    </section>
-    
  </back>
 </rfc>
