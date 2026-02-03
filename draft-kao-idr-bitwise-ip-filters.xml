@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-model href="rfc7991bis.rnc"?>
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-kao-idr-bitwise-ip-filters-03" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" consensus="true" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-kao-idr-bitwise-ip-filters-04" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" consensus="true" version="3">
   <front>
     <title abbrev="FlowSpec Bitwise IP Filters">
       Bitwise IP Filters for BGP FlowSpec
     </title>
-    <seriesInfo name="Internet-Draft" value="draft-kao-idr-bitwise-ip-filters-03"/>
+    <seriesInfo name="Internet-Draft" value="draft-kao-idr-bitwise-ip-filters-04"/>
     <author fullname="Nat Kao" initials="N" surname="Kao">
       <organization>Individual Contributor</organization>
       <address>
