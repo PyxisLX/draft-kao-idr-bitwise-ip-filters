@@ -371,12 +371,19 @@
           We can remove the old rules and then shut down SVC2 and SVC3 after the new rules are activated.
         </t>
       </section>
+      <section title="Symmetric Traffic Sampling">
+        <t>
+          Some capacity-limited devices, such as DPI equipment, may benefit from symmetric traffic sampling.
+          Since these devices also require traffic from both directions, we can deploy bitwise filters to sample traffic flows by matching
+          against a set of specific least significant bits from different subnets.
+        </t>
+      </section>
     </section>
     <section title="Comparisons with Other Approaches">
       <t>
         This section compares the proposed solution with other existing approaches.
       </t>
-      <section title="Comparison with Existing Prefix Filters">
+      <section title="Comparison with Existing Prefix Filters" anchor="existing-filter">
         <t>
           IPv4 Source/Destination Prefix filters defined in
           <xref target="RFC8955"/>
@@ -403,14 +410,13 @@
           <xref target="I-D.cui-idr-content-filter-flowspec"/>
           also provides the bitwise matching capability.
           Although the filter supports bitwise matching against any position in the packet, address matching is not its primary design goal.             Manual calculation of offsets is required to use this filter.
-          Therefore, it may not be suitable for scenarios that match address fields only.
+          Therefore, it may not be optimal for scenarios that match address fields only.
         </t>
       </section>
       <section title="Comparison with the Hash-based ECMP">
         <t>
           With the following conditions met, traditional hash-based ECMP may be used for the scenario described in
-          <xref target="symmetric-load-balancing-section"/>
-          .
+          <xref target="symmetric-load-balancing-section"/>.
         </t>
         <ul spacing="normal">
           <li>
@@ -435,6 +441,26 @@
           Therefore, the bitwise matching filter-based solution is more suitable for this scenario.
         </t>
       </section>
+    </section>
+    <section anchor="Deployment" title="Deployment Guidelines">
+      <t>
+        The filter defined in this document matches against arbitrary bits in the address fields.
+        While syntactically this filter does not conflict with existing <xref target="RFC8955"/>/<xref target="RFC8956"/> prefix filters,
+        using either the bitwise filter or the existing filter as described in <xref target="existing-filter"/> is recommended.
+      </t>
+      <t>
+        When deployed with redirection actions, these FS rules are actually PBR rules.
+        Since these rules bypass the typical routing lookups just as typical PBR rules do, it is possible to form forwarding loops.
+        User discretion is required.
+      </t>
+      <t>
+        If deployed with redirection actions and there are ECMPs to the redirection destination, the matching packets are subject to
+        hash-based load-balancing towards that destination.
+      </t>
+      <t>
+        While some platforms are capable of processing bitwise filters at line-rate speeds, some aren't.
+        Therefore, before deployments, it is recommended to determine the performance of bitwise matching.
+      </t>
     </section>
     <section anchor="IANA" title="IANA Considerations">
       <t>
