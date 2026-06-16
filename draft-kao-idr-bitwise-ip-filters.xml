@@ -114,38 +114,63 @@
           <dd>TBD1</dd>
           <dt>Description: </dt>
           <dd>
-            This component performs matching against designated bits in the destination address field.
+            This component matches against designated bits in the destination address field.
+            It contains a list of &lt;Pattern, Mask&gt; pairs.
+            If the destination address matches any pair in the list, this component is considered a match.
           </dd>
-          <dt>The field that the filter targets in the IPv4 Packets: </dt>
+          <dt>The field that the component targets in the IPv4 Packets: </dt>
           <dd>Destination address field</dd>
-          <dt>The field that the filter targets in the IPv6 Packets: </dt>
+          <dt>The field that the component targets in the IPv6 Packets: </dt>
           <dd>Destination address field</dd>
           <dt>Length: </dt>
           <dd>
-            This field indicates the length of the value field in octets. The length is 8 for AFI = 1(IPv4) and 32 for AFI = 2(IPv6). If
-            the length is neither 8 nor 32, the NLRI is considered MALFORMED. If the length is inconsistent with the AFI definition, the
-            NLRI is also considered MALFORMED.
+            This field indicates the length of the value field in octets.
+            The length is a nonzero multiple of 8 for AFI = 1 (IPv4) or a nonzero multiple of 32 for AFI = 2 (IPv6).
+            If the length is not a nonzero multiple of 8 for AFI = 1, the NLRI is considered MALFORMED.
+            Similarly, if the length is not a nonzero multiple of 32 for AFI = 2, the NLRI is also considered MALFORMED.
           </dd>
           <dt>Encoding of Component Value field: </dt>
           <dd>
-            The match is encoded as a 2-tuple of the form &lt;Prefix, Mask&gt; , where:
+            The match is encoded as a list: &lt;Pattern, Mask&gt;, &lt;Pattern, Mask&gt;, ..., &lt;Pattern, Mask&gt;
           </dd>
         </dl>
         <dl>
-          <dt>Prefix: </dt>
+          <dt>Pattern: </dt>
           <dd>
-            a 4-octet bit string for AFI = 1 and a 16-octet bit string for AFI = 2. It indicates the destination address value to
-            match against.
+            a 4-octet bit string for AFI = 1 and a 16-octet bit string for AFI = 2.
+            It indicates the destination address value to match.
           </dd>
           <dt>Mask: </dt>
           <dd>
-            a 4-octet bit string for AFI = 1 and a 16-octet bit string for AFI = 2. It indicates the bit positions to match.
-            In the matching process, we only consider bit positions designated with value 1 in the Mask field. An address is a match if
-            and only if the value of the address matches the value in the Prefix field in every designated bit position.
+            a 4-octet bit mask for AFI = 1 and a 16-octet bit mask for AFI = 2.
+            It indicates the bit positions to match with the Pattern field.
+            The bit positions can be discontiguous.
+            Only bit positions set to 1 in the Mask field are considered for matching; other bit positions are ignored.
+          </dd>
+          <dt>Construction of the list: </dt>
+          <dd>
+            <ul>
+              <li>
+                Each &lt;Pattern, Mask&gt; pair is treated as a binary string.
+              </li>
+              <li>
+                Each pair MUST be present no more than once in a single component.
+              </li>
+              <li>
+                Each pair is compared using the memcmp() function as defined in <xref target="ISO_IEC_9899"/>.
+              </li>
+              <li>
+                Each pair MUST follow strict ascending order by the memcmp() results.
+                That is, the lower pair MUST precede the higher pairs.
+              </li>
+            </ul>
           </dd>
           <dt>Conflicts with other filters: </dt>
           <dd>
-            None
+            None.
+            However, it is recommended to use either the bitwise filter
+            or the "Destination Prefix filter" defined in <xref target="I-D.ietf-idr-fsv2-ip-basic"/>, not both.
+            See also in <xref target="existing-filter"/>.
           </dd>
         </dl>
       </section>
@@ -159,88 +184,86 @@
           <dd>TBD2</dd>
           <dt>Description: </dt>
           <dd>
-            This component performs matching against designated bits in the source address field.
+            This component matches against designated bits in the source address field.
+            It contains a list of &lt;Pattern, Mask&gt; pairs.
+            If the source address matches any pair in the list, this component is considered a match.
           </dd>
-          <dt>The field that the filter targets in the IPv4 Packets: </dt>
+          <dt>The field that the component targets in the IPv4 Packets: </dt>
           <dd>Source address field</dd>
-          <dt>The field that the filter targets in the IPv6 Packets: </dt>
+          <dt>The field that the component targets in the IPv6 Packets: </dt>
           <dd>Source address field</dd>
           <dt>Length: </dt>
           <dd>
-            This field indicates the length of the value field in octets. The length is 8 for AFI = 1(IPv4) and 32 for AFI = 2(IPv6). If
-            the length is neither 8 nor 32, the NLRI is considered MALFORMED. If the length is inconsistent with the AFI definition, the
-            NLRI is also considered MALFORMED.
+            This field indicates the length of the value field in octets.
+            The length is a nonzero multiple of 8 for AFI = 1 (IPv4) or a nonzero multiple of 32 for AFI = 2 (IPv6).
+            If the length is not a nonzero multiple of 8 for AFI = 1, the NLRI is considered MALFORMED.
+            Similarly, if the length is not a nonzero multiple of 32 for AFI = 2, the NLRI is also considered MALFORMED.
           </dd>
           <dt>Encoding of Component Value field: </dt>
           <dd>
-            The match is encoded as a 2-tuple of the form &lt;Prefix, Mask&gt; , where:
+            The match is encoded as a list: &lt;Pattern, Mask&gt;, &lt;Pattern, Mask&gt;, ..., &lt;Pattern, Mask&gt;
           </dd>
         </dl>
         <dl>
-          <dt>Prefix: </dt>
+          <dt>Pattern: </dt>
           <dd>
-            a 4-octet bit string for AFI = 1 and a 16-octet bit string for AFI = 2. It indicates the source address value to
-            match against.
+            a 4-octet bit string for AFI = 1 and a 16-octet bit string for AFI = 2.
+            It indicates the source address value to match.
           </dd>
           <dt>Mask: </dt>
           <dd>
-            a 4-octet bit string for AFI = 1 and a 16-octet bit string for AFI = 2. It indicates the bit positions to match.
-            In the matching process, we only consider bit positions designated with value 1 in the Mask field. An address is a match if
-            and only if the value of the address matches the value in the Prefix field in every designated bit position.
+            a 4-octet bit mask for AFI = 1 and a 16-octet bit mask for AFI = 2.
+            It indicates the bit positions to match with the Pattern field.
+            The bit positions can be discontiguous.
+            Only bit positions set to 1 in the Mask field are considered for matching; other bit positions are ignored.
+          </dd>
+          <dt>Construction of the list: </dt>
+          <dd>
+            <ul>
+              <li>
+                Each &lt;Pattern, Mask&gt; pair is treated as a binary string.
+              </li>
+              <li>
+                Each pair MUST be present no more than once in a single component.
+              </li>
+              <li>
+                Each pair is compared using the memcmp() function as defined in <xref target="ISO_IEC_9899"/>.
+              </li>
+              <li>
+                Each pair MUST follow strict ascending order by the memcmp() results.
+                That is, the lower pair MUST precede the higher pairs.
+              </li>
+            </ul>
           </dd>
           <dt>Conflicts with other filters: </dt>
           <dd>
-            None
+            None.
+            However, it is recommended to use either the bitwise filter
+            or the "Source Prefix filter" defined in <xref target="I-D.ietf-idr-fsv2-ip-basic"/>, not both.
+            See also in <xref target="existing-filter"/>.
           </dd>
         </dl>
       </section>
       <section title="Ordering Procedures for the Sub-TLVs">
         <t>
-          This section describes the procedures for sorting the Sub-TLVs defined in this draft of the same type.
+          When comparing two NLRIs with the same type of bitwise matching filter component, the following procedures apply:
         </t>
-        <dl>
-          <dt>Multiple Occurrences of the Sub-TLV of the same type in the same NLRI: </dt>
-          <dd>
-            <t>
-              The Sub-TLV of the same type with different values MAY appear multiple times in the same NLRI.
-              The address field matches if it matches any instances of the Sub-TLV that appear in the NLRI.
-              When sending multiple instances of the Sub-TLV of the same type, the following rules apply:
-            </t>
-            <ol>
-              <li>
-                Duplicate values are not allowed. The Sub-TLVs with the same value MUST appear only once.
-              </li>
-              <li>
-                Comparing the value field in each instance as a binary string using the memcmp() function as defined by
-                <xref target="ISO_IEC_9899"/> determines the precedence of the instance.
-                The lowest one (memcmp) has higher precedence.
-              </li>
-              <li>
-                The Sub-TLV instance with the highest precedence MUST precede instances with lower precedence.
-              </li>
-            </ol>
-          </dd>
-          <dt>Filter Ordering Rules of the Sub-TLV of the same type between different NLRIs: </dt>
-          <dd>
-            <t>
-              When comparing two NLRIs with the same type of Sub-TLV instances, the following rules apply:
-            </t>
-            <ol>
-              <li>
-                The Sub-TLV instances in the same NLRI received must be in strict value-ascending order, or the NLRI is considered MALFORMED.
-              </li>
-              <li>
-                Compare the sequence of the Sub-TLV instances from each NLRI as binary strings using the memcmp() function defined by
-                <xref target="ISO_IEC_9899"/>.
-                If there are multiple instances of the Sub-TLV in the same NLRI, treat these instances as a single binary string.
-                For strings of equal length, the lowest string has the highest precedence.
-                For strings of different lengths, compare the common prefix of the string only.
-                If the common prefix is unequal, the string with the lowest common prefix has higher precedence.
-                If the common prefix is equal, the longest string has higher precedence than the shorter one.
-              </li>
-            </ol>
-          </dd>
-        </dl>
+        <ol>
+          <li>
+            Compare the bitwise filter component Sub-TLVs of the same type from each NLRI as binary strings using the memcmp() function
+            defined by <xref target="ISO_IEC_9899"/>.
+          </li>
+          <li>
+            For strings of equal length, the lowest string has the highest precedence.
+          </li>
+          <li>
+            <t>For strings of different lengths, compare the common prefix of the string only.</t>
+            <ul>
+              <li>If the common prefix is unequal, the string with the lowest common prefix has higher precedence.</li>
+              <li>If the common prefix is equal, the longest string has higher precedence than the shorter one.</li>
+            </ul>
+          </li>
+        </ol>
       </section>
     </section>
     <section title="Use Cases">
