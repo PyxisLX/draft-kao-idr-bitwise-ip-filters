@@ -104,7 +104,7 @@
         <xref target="I-D.hares-idr-fsv2-more-ip-filters" sectionFormat="of" section="2.5"/>.
         Sub-TLVs for both source and destination address fields are defined.
       </t>
-      <section title="Destination Address Bitwise Filter Component Sub-TLV">
+      <section title="Destination Address Bitwise Filter Component Sub-TLV" anchor="dst-bitwise-subtlv-definition">
         <dl>
           <dt>Summary: </dt>
           <dd>
@@ -126,8 +126,6 @@
           <dd>
             This field indicates the length of the value field in octets.
             The length is a nonzero multiple of 8 for AFI = 1 (IPv4) or a nonzero multiple of 32 for AFI = 2 (IPv6).
-            If the length is not a nonzero multiple of 8 for AFI = 1, the NLRI is considered MALFORMED.
-            Similarly, if the length is not a nonzero multiple of 32 for AFI = 2, the NLRI is also considered MALFORMED.
           </dd>
           <dt>Encoding of Component Value field: </dt>
           <dd>
@@ -154,7 +152,7 @@
                 Each &lt;Pattern, Mask&gt; pair is treated as a binary string.
               </li>
               <li>
-                Each pair MUST be present no more than once in a single component.
+                Each pair MUST be present no more than once in a single component Sub-TLV.
               </li>
               <li>
                 Each pair is compared using the memcmp() function as defined in <xref target="ISO_IEC_9899"/>.
@@ -174,7 +172,7 @@
           </dd>
         </dl>
       </section>
-      <section title="Source Address Bitwise Filter Component Sub-TLV">
+      <section title="Source Address Bitwise Filter Component Sub-TLV" anchor="src-bitwise-subtlv-definition">
         <dl>
           <dt>Summary: </dt>
           <dd>
@@ -196,8 +194,6 @@
           <dd>
             This field indicates the length of the value field in octets.
             The length is a nonzero multiple of 8 for AFI = 1 (IPv4) or a nonzero multiple of 32 for AFI = 2 (IPv6).
-            If the length is not a nonzero multiple of 8 for AFI = 1, the NLRI is considered MALFORMED.
-            Similarly, if the length is not a nonzero multiple of 32 for AFI = 2, the NLRI is also considered MALFORMED.
           </dd>
           <dt>Encoding of Component Value field: </dt>
           <dd>
@@ -224,7 +220,7 @@
                 Each &lt;Pattern, Mask&gt; pair is treated as a binary string.
               </li>
               <li>
-                Each pair MUST be present no more than once in a single component.
+                Each pair MUST be present no more than once in a single component Sub-TLV.
               </li>
               <li>
                 Each pair is compared using the memcmp() function as defined in <xref target="ISO_IEC_9899"/>.
@@ -244,7 +240,7 @@
           </dd>
         </dl>
       </section>
-      <section title="Ordering Procedures for the Sub-TLVs">
+      <section title="Comparing the Sub-TLVs between NLRIs">
         <t>
           When comparing two NLRIs with the same type of bitwise matching filter component, the following procedures apply:
         </t>
@@ -264,6 +260,27 @@
             </ul>
           </li>
         </ol>
+      </section>
+      <section title="Error Handling for the Sub-TLVs">
+        <t>
+          When receiving a Bitwise Filter Component Sub-TLV, the following error handling procedures apply:
+        </t>
+        <ul>
+          <li>
+            If the length is not a nonzero multiple of 8 for AFI = 1, the component Sub-TLV is considered MALFORMED.
+            Similarly, if the length is not a nonzero multiple of 32 for AFI = 2, the component Sub-TLV is also considered MALFORMED.
+          </li>
+          <li>
+            If there is more than one identical &lt;Pattern, Mask&gt; pair, the component Sub-TLV is considered MALFORMED.
+          </li>
+          <li>
+            If the &lt;Pattern, Mask&gt;
+            pairs are not in a strict ascending order as described in
+            <xref target="dst-bitwise-subtlv-definition"/> and
+            <xref target="src-bitwise-subtlv-definition"/>,
+            the component Sub-TLV is considered MALFORMED.
+          </li>
+        </ul>
       </section>
     </section>
     <section title="Use Cases">
