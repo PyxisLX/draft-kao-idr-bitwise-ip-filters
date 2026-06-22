@@ -37,7 +37,7 @@
     <abstract>
       <t>
         This draft introduces the bitwise matching filters for source or destination IPv4/IPv6 address fields. These filters enhance
-        the functionalities of the BGP Flow Specification framework and aid scenarios involving symmetric traffic load balancing.
+        the functionalities of the BGP Flow Specification framework and aid scenarios involving symmetric traffic load-balancing.
       </t>
     </abstract>
   </front>
@@ -46,14 +46,14 @@
     <section>
       <name>Introduction</name>
       <t>
-        Symmetric paths for both directions are required to allow session inspecting service instances (such as the deep packet
-        inspection(DPI) or the firewall service instances) to process the traffic correctly.
-        If a single instance cannot handle the traffic load, symmetric load balancing between multiple inspecting service instances is needed.
+        Symmetric paths for traffic in both directions are required to allow session inspection service instances (such as deep packet
+        inspection(DPI) or firewall service instances) to process traffic correctly.
+        If a single instance cannot handle the traffic load, symmetric load-balancing across multiple inspecting service instances is required.
       </t>
       <t>
-        Hash-based load balancing may not be suitable for this purpose since the order of fields for the hashing mechanism may not
-        be configurable, and different vendors implement different proprietary hashing functions. 
-        In a multi-vendor environment, it is desirable to load-balance traffic between each instance using a standardized approach.
+        Hash-based load-balancing may not be suitable for this purpose. Since the order of the packet header fields for the hashing
+        mechanism is not always configurable, and different vendors implement various proprietary hashing functions.
+        In a multi-vendor environment, it is desirable to load-balance traffic using a standardized approach.
       </t>
       <t>
         The BGP Flow Specification(BGP-FS) Network Layer Reachability Information(NLRI) is a standardized approach to distributing
@@ -283,19 +283,21 @@
         </ul>
       </section>
     </section>
-    <section title="Use Cases">
+    <section title="Use Cases" anchor="use-cases">
       <t>
         This section describes various use cases for these filters.
       </t>
       <section title="Symmetric Traffic Load Balancing" anchor="symmetric-load-balancing-section">
         <t>
           Referring to <xref target="symmetric-load-balancing"/>, 
-          subscriber traffic is going through a set of inline service instances(e.g., DPIs, stateful firewalls)
+          subscriber traffic passes through a set of inline service instances(e.g., DPIs, stateful firewalls)
           before entering the Internet.
-          Inline service instances SVC0, SVC1, SVC2, and SVC3 need to process both directions of traffic in the same session.
+        </t>
+        <t>
+          Inline service instances SVC0, SVC1, SVC2, and SVC3 need to process the same session in both directions.
           Any single service instance cannot handle the traffic volume alone.
-          Assuming the traffic is distributed almost uniformly among combinations of the least significant 2 bits of the subscribers'
-          addresses.
+          Assuming the traffic is distributed almost uniformly among combinations of
+          the least significant 2 bits of the subscribers' addresses.
         </t>
           <figure title="Symmetric Traffic Load Balancing Between Routers" anchor="symmetric-load-balancing">
             <artwork type="ascii-art">
@@ -316,8 +318,9 @@
             </artwork>
           </figure>
           <t>
-            Hash-based load balancing may not be suitable for this case since the order of fields for the hashing mechanism may not be
-            configurable, and different vendors implement different proprietary hashing functions.
+            The order of fields for hashing functions is not always configurable, and different vendors implement various proprietary
+            hashing functions.
+            Therefore, hash-based load-balancing may not be suitable for this case.
           </t>
           <t>
             Deploying bitwise address filters is a viable multi-vendor solution in this case. For example, we can deploy:
@@ -357,6 +360,19 @@
             </li>
           </ul>
           <t>
+            If, instead, we want to load-balance a subset of subscribers from subnet P1/M1 only, the bitwise components also support that.
+          </t>
+          <t>
+            For example, FSv2 rule X0 can be modified to match both the most significant M1 bits as P1 and the least significant 2 bits as
+            00 in a single &lt;Pattern, Mask&gt; pair since the matching positions indicated by the Mask can be discontiguous as mentioned in
+            <xref target="src-bitwise-subtlv-definition"/>.
+          </t>
+          <t>
+            FSv2 rule Y0 can be modified to match both the most significant M1 bits as P1 and the least significant 2 bits as
+            00 in a single &lt;Pattern, Mask&gt; pair since the matching positions indicated by the Mask can be discontiguous as mentioned in
+            <xref target="dst-bitwise-subtlv-definition"/>.
+          </t>
+          <t>
             The matched traffic is directed to a specific service instance by various mechanisms, such as(but not limited to) the
             following:
           </t>
@@ -368,15 +384,15 @@
               Redirect-to-IP action as described in <xref target="I-D.ietf-idr-flowspec-redirect-ip"/>
             </li>
             <li>
-              Indirection-id redirection as described in <xref target="I-D.ietf-idr-flowspec-path-redirect"/>
+              Redirect into an SR Policy as described in <xref target="I-D.ietf-idr-ts-flowspec-srv6-policy"/>
             </li>
             <li>
-              Redirect into an SR Policy as described in <xref target="I-D.ietf-idr-ts-flowspec-srv6-policy"/>
+              Indirection-id redirection as described in <xref target="I-D.ietf-idr-flowspec-path-redirect"/>
             </li>
           </ul>
           <t>
-            We can load balance the traffic to N service instances while keeping the same session on the same instance using the rules
-            matching the least significant log(N) bits of the address fields.
+            Using this approach, the bitwise filter components load-balance traffic into N service instances while keeping the same session
+            on the same instance.
           </t>
       </section>
       <section title="Dynamic Service Scaling">
@@ -429,19 +445,25 @@
           <xref target="RFC8955"/>
           and <xref target="I-D.ietf-idr-fsv2-ip-basic"/>
           cannot match the least significant bits.
+        </t>
+        <t>
           IPv6 Source/Destination Prefix filters defined in 
           <xref target="RFC8956"/>
           and <xref target="I-D.ietf-idr-fsv2-ip-basic"/>
           can either match the least significant bits or the IPv6 Prefix, but not both.
-          These filters may not be suitable for use cases described in Section 3.1 without real-time traffic monitoring mechanisms for every
-          possible source/destination prefix. The manageability and flexibility are not as good as the proposed solution either.
         </t>
         <t>
-          If both the prefix and bitwise matching are needed, using the bitwise matching filter is recommended since it provides both
-          functionalities in the same filter.
-          If only prefix matching is required, using filters defined in
-          <xref target="RFC8955"/>, <xref target="RFC8956"/>, or <xref target="I-D.ietf-idr-fsv2-ip-basic"/>
-          is more efficient and recommended.
+          These filters may not be suitable for the use cases described in <xref target="use-cases"/>
+          without intensive real-time traffic monitoring mechanisms for every possible source/destination prefix.
+          The manageability and flexibility are not as good as the proposed solution, either.
+        </t>
+        <t>
+          Since the bitwise filter component provides both prefix and bitwise matching capabilities(as briefly described in Section 3.1), it
+          is the recommended component for matching both.
+        </t>
+        <t>
+          If only prefix matching is required, using filters defined in [RFC8955], [RFC8956], or [I-D.ietf-idr-fsv2-ip-basic] is more
+          efficient and recommended.
         </t>
       </section>
       <section title="Comparison with the Content Filter">
@@ -564,8 +586,8 @@
     </references>
     <references title="Informative References">
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-flowspec-redirect-ip.xml"/>
-      <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-flowspec-path-redirect.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-ts-flowspec-srv6-policy.xml"/>
+      <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-flowspec-path-redirect.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.cui-idr-content-filter-flowspec.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-multinexthop-attribute.xml"/>
     </references>
