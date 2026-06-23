@@ -36,8 +36,10 @@
     <keyword>Bitwise IP Filters, BGP FlowSpec</keyword>
     <abstract>
       <t>
-        This draft introduces the bitwise matching filters for source or destination IPv4/IPv6 address fields. These filters enhance
-        the functionalities of the BGP Flow Specification framework and aid scenarios involving symmetric traffic load-balancing.
+        This document introduces the bitwise match filter component for source and destination
+        IPv4/IPv6 address fields.
+        These components enhance the BGP Flow Specification framework and provide a solution for
+        dynamic symmetric traffic load-balancing.
       </t>
     </abstract>
   </front>
@@ -46,32 +48,44 @@
     <section>
       <name>Introduction</name>
       <t>
-        Symmetric paths for traffic in both directions are required to allow session inspection service instances (such as deep packet
-        inspection(DPI) or firewall service instances) to process traffic correctly.
-        If a single instance cannot handle the traffic load, symmetric load-balancing across multiple inspecting service instances is required.
+        Symmetric paths for traffic in both directions are required to allow session inspection
+        service instances (such as deep packet inspection(DPI) or firewall service instances) to
+        process traffic correctly.
+        If a single instance cannot handle the traffic load, symmetric load-balancing across
+        multiple inspecting service instances is required.
       </t>
       <t>
-        Hash-based load-balancing may not be suitable for this purpose. Since the order of the packet header fields for the hashing
-        mechanism is not always configurable, and different vendors implement various proprietary hashing functions.
-        In a multi-vendor environment, it is desirable to load-balance traffic using a standardized approach.
+        Hash-based load-balancing may not be suitable for this purpose. Since the order of the
+        packet header fields for the hashing mechanism is not always configurable, and different
+        vendors implement various proprietary hashing functions.
+        In a multi-vendor environment, it is desirable to load-balance traffic using a standardized
+        approach.
       </t>
       <t>
-        The BGP Flow Specification(BGP-FS) Network Layer Reachability Information(NLRI) is a standardized approach to distributing
-        traffic filters via BGP.
-        The BGP Flow Specification version 2(FSv2) defined in <xref target="I-D.ietf-idr-fsv2-ip-basic"/>
-        enhances BGP-FS, allowing user-defined order of filters.
+        The BGP Flow Specification (BGP-FS) Network Layer Reachability Information (NLRI) is a
+        standardized approach to distributing traffic filters via BGP.
+        The BGP Flow Specification version 2 (FSv2) <xref target="I-D.ietf-idr-fsv2-ip-basic"/>
+        is an enhancement to BGP-FS.
+        It allows a user-defined order of filters.
         The Extended IP Filters defined in <xref target="I-D.hares-idr-fsv2-more-ip-filters"/>
         further extend the filter types of FSv2.
       </t>
       <t>
-        This draft defines the bitwise matching filters for source or destination IPv4/IPv6 address fields. We can achieve dynamic symmetric
-        traffic load-balancing using these filters if the traffic is distributed almost uniformly among combinations of the least
-        significant bits of the source or destination address fields.
+        This document defines the bitwise match filter component Sub-TLVs for source and destination
+        IPv4/IPv6 address fields.
+        These Sub-TLVs fall in the category of the Extended IP Filters TLV defined in
+        <xref target="I-D.hares-idr-fsv2-more-ip-filters"/>.
+        Using these Sub-TLVs allows operators to match arbitrary bit positions against the
+        corresponding address fields.
+        We can symmetrically load-balance traffic using this property if the traffic is distributed
+        almost uniformly across combinations of the least significant bits of the source or
+        destination address fields.
       </t>
       <section title="Requirements Language" anchor="requirements">
         <t>
-          The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT
-          RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14
+          The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD
+          NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document
+          are to be interpreted as described in BCP 14
           <xref target="RFC2119"/>
           <xref target="RFC8174"/>
           when, and only when, they appear in all capitals, as shown here.
@@ -80,15 +94,25 @@
       <section title="Definitions and Acronyms" anchor="definitions">
         <dl>
           <dt>AFI: </dt><dd>Address Family Identifier</dd>
-          <dt>BGP-FS: </dt><dd>BGP Flow Specification <xref target="RFC8955"/> <xref target="RFC8956"/></dd>
+          <dt>BGP-FS: </dt>
+          <dd>
+            BGP Flow Specification
+            <xref target="RFC8955"/>
+            <xref target="RFC8956"/>
+          </dd>
           <dt>DPI: </dt><dd>Deep Packet Inspection</dd>
           <dt>ECMP: </dt><dd>Equal-Cost Multipath</dd>
-          <dt>FSv2: </dt><dd>BGP Flow Specification Version 2 <xref target="I-D.ietf-idr-fsv2-ip-basic"/></dd>
+          <dt>FSv2: </dt>
+          <dd>
+            BGP Flow Specification Version 2
+            <xref target="I-D.ietf-idr-fsv2-ip-basic"/>
+          </dd>
           <dt>SAFI: </dt><dd>Subsequent Address Family Identifier</dd>
           <dt>Service Instance: </dt>
           <dd>
-            A service instance is an instance of VNF or a physical device that instantiates a service function.
-            It is spawned and terminated dynamically based on the traffic loads.
+            A service instance is an instance of VNF or a physical device that instantiates a
+            service function. It is spawned and terminated dynamically based on traffic
+            usage.
           </dd>
           <dt>VNF: </dt><dd>Virtual Network Function</dd>
         </dl>
@@ -99,9 +123,9 @@
 
     <section title="Bitwise Address Filters for FSv2">
       <t>
-        This section defines the bitwise address filter component Sub-TLVs for FSv2. These Sub-TLVs are classified as "IP Extended
-        Filters" as defined in
-        <xref target="I-D.hares-idr-fsv2-more-ip-filters" sectionFormat="of" section="2.5"/>.
+        This section defines the bitwise address filter component Sub-TLVs for FSv2.
+        These Sub-TLVs are classified as IP Extended Filters in
+        <xref target="I-D.hares-idr-fsv2-more-ip-filters"/>.
         Sub-TLVs for both source and destination address fields are defined.
       </t>
       <section title="Destination Address Bitwise Filter Component Sub-TLV" anchor="dst-bitwise-subtlv-definition">
@@ -116,7 +140,8 @@
           <dd>
             This component matches against designated bits in the destination address field.
             It contains a list of &lt;Pattern, Mask&gt; pairs.
-            If the destination address matches any pair in the list, this component is considered a match.
+            If the destination address matches any pair in the list, this component is considered a
+            match.
           </dd>
           <dt>The field that the component targets in the IPv4 Packets: </dt>
           <dd>Destination address field</dd>
@@ -124,12 +149,14 @@
           <dd>Destination address field</dd>
           <dt>Length: </dt>
           <dd>
-            This field indicates the length of the value field in octets.
-            The length is a nonzero multiple of 8 for AFI = 1 (IPv4) or a nonzero multiple of 32 for AFI = 2 (IPv6).
+            This field indicates the length of the value field in octets. The length is
+            a nonzero multiple of 8 for AFI = 1 (IPv4) or a nonzero multiple of 32 for AFI = 2
+            (IPv6).
           </dd>
           <dt>Encoding of Component Value field: </dt>
           <dd>
-            The match is encoded as a list: &lt;Pattern, Mask&gt;, &lt;Pattern, Mask&gt;, ..., &lt;Pattern, Mask&gt;
+            The match is encoded as a list: &lt;Pattern, Mask&gt;, &lt;Pattern, Mask&gt;, ...,
+            &lt;Pattern, Mask&gt;
           </dd>
         </dl>
         <dl>
@@ -143,7 +170,8 @@
             a 4-octet bit mask for AFI = 1 and a 16-octet bit mask for AFI = 2.
             It indicates the bit positions to match with the Pattern field.
             The bit positions can be discontiguous.
-            Only bit positions set to 1 in the Mask field are considered for matching; other bit positions are ignored.
+            Only bit positions set to 1 in the Mask field are considered for matching; other bit
+            positions are ignored.
           </dd>
           <dt>Construction of the list: </dt>
           <dd>
@@ -155,7 +183,8 @@
                 Each pair MUST be present no more than once in a single component Sub-TLV.
               </li>
               <li>
-                Each pair is compared using the memcmp() function as defined in <xref target="ISO_IEC_9899"/>.
+                Each pair is compared using the memcmp() function as defined in
+                <xref target="ISO_IEC_9899"/>.
               </li>
               <li>
                 Each pair MUST follow strict ascending order by the memcmp() results.
@@ -167,7 +196,8 @@
           <dd>
             None.
             However, it is recommended to use either the bitwise filter
-            or the "Destination Prefix filter" defined in <xref target="I-D.ietf-idr-fsv2-ip-basic"/>, not both.
+            or the "Destination Prefix filter" defined in
+            <xref target="I-D.ietf-idr-fsv2-ip-basic"/>, not both.
             See also in <xref target="existing-filter"/>.
           </dd>
         </dl>
@@ -184,7 +214,8 @@
           <dd>
             This component matches against designated bits in the source address field.
             It contains a list of &lt;Pattern, Mask&gt; pairs.
-            If the source address matches any pair in the list, this component is considered a match.
+            If the source address matches any pair in the list, this component is considered a
+            match.
           </dd>
           <dt>The field that the component targets in the IPv4 Packets: </dt>
           <dd>Source address field</dd>
@@ -192,12 +223,14 @@
           <dd>Source address field</dd>
           <dt>Length: </dt>
           <dd>
-            This field indicates the length of the value field in octets.
-            The length is a nonzero multiple of 8 for AFI = 1 (IPv4) or a nonzero multiple of 32 for AFI = 2 (IPv6).
+            This field indicates the length of the value field in octets. The length is
+            a nonzero multiple of 8 for AFI = 1 (IPv4) or a nonzero multiple of 32 for AFI = 2
+            (IPv6).
           </dd>
           <dt>Encoding of Component Value field: </dt>
           <dd>
-            The match is encoded as a list: &lt;Pattern, Mask&gt;, &lt;Pattern, Mask&gt;, ..., &lt;Pattern, Mask&gt;
+            The match is encoded as a list: &lt;Pattern, Mask&gt;, &lt;Pattern, Mask&gt;, ...,
+            &lt;Pattern, Mask&gt;
           </dd>
         </dl>
         <dl>
@@ -211,7 +244,8 @@
             a 4-octet bit mask for AFI = 1 and a 16-octet bit mask for AFI = 2.
             It indicates the bit positions to match with the Pattern field.
             The bit positions can be discontiguous.
-            Only bit positions set to 1 in the Mask field are considered for matching; other bit positions are ignored.
+            Only bit positions set to 1 in the Mask field are considered for matching; other bit
+            positions are ignored.
           </dd>
           <dt>Construction of the list: </dt>
           <dd>
@@ -223,7 +257,8 @@
                 Each pair MUST be present no more than once in a single component Sub-TLV.
               </li>
               <li>
-                Each pair is compared using the memcmp() function as defined in <xref target="ISO_IEC_9899"/>.
+                Each pair is compared using the memcmp() function as defined in
+                <xref target="ISO_IEC_9899"/>.
               </li>
               <li>
                 Each pair MUST follow strict ascending order by the memcmp() results.
@@ -233,21 +268,22 @@
           </dd>
           <dt>Conflicts with other filters: </dt>
           <dd>
-            None.
-            However, it is recommended to use either the bitwise filter
-            or the "Source Prefix filter" defined in <xref target="I-D.ietf-idr-fsv2-ip-basic"/>, not both.
+            None. However, it is recommended to use either the bitwise filter
+            or the "Source Prefix filter" defined in
+            <xref target="I-D.ietf-idr-fsv2-ip-basic"/>, not both.
             See also in <xref target="existing-filter"/>.
           </dd>
         </dl>
       </section>
       <section title="Comparing the Sub-TLVs between NLRIs">
         <t>
-          When comparing two NLRIs with the same type of bitwise matching filter component, the following procedures apply:
+          When comparing two NLRIs with the same type of bitwise matching filter component, the
+          following procedures apply:
         </t>
         <ol>
           <li>
-            Compare the bitwise filter component Sub-TLVs of the same type from each NLRI as binary strings using the memcmp() function
-            defined by <xref target="ISO_IEC_9899"/>.
+            Compare the bitwise filter component Sub-TLVs of the same type from each NLRI as binary
+            strings using the memcmp() function defined by <xref target="ISO_IEC_9899"/>.
           </li>
           <li>
             For strings of equal length, the lowest string has the highest precedence.
@@ -255,28 +291,36 @@
           <li>
             <t>For strings of different lengths, compare the common prefix of the string only.</t>
             <ul>
-              <li>If the common prefix is unequal, the string with the lowest common prefix has higher precedence.</li>
-              <li>If the common prefix is equal, the longest string has higher precedence than the shorter one.</li>
+              <li>
+                If the common prefix is unequal, the string with the lowest common prefix has higher
+                precedence.
+              </li>
+              <li>
+                If the common prefix is equal, the longest string has higher precedence than the
+                shorter one.
+              </li>
             </ul>
           </li>
         </ol>
       </section>
       <section title="Error Handling for the Sub-TLVs">
         <t>
-          When receiving a Bitwise Filter Component Sub-TLV, the following error handling procedures apply:
+          When receiving a Bitwise Filter Component Sub-TLV, the following error handling procedures
+          apply:
         </t>
         <ul>
           <li>
-            If the length is not a nonzero multiple of 8 for AFI = 1, the component Sub-TLV is considered MALFORMED.
-            Similarly, if the length is not a nonzero multiple of 32 for AFI = 2, the component Sub-TLV is also considered MALFORMED.
+            If the length is not a nonzero multiple of 8 for AFI = 1, the component Sub-TLV is
+            considered MALFORMED. Similarly, if the length is not a nonzero multiple of
+            32 for AFI = 2, the component Sub-TLV is also considered MALFORMED.
           </li>
           <li>
-            If there is more than one identical &lt;Pattern, Mask&gt; pair, the component Sub-TLV is considered MALFORMED.
+            If there is more than one identical &lt;Pattern, Mask&gt; pair, the component Sub-TLV is
+            considered MALFORMED.
           </li>
           <li>
-            If the &lt;Pattern, Mask&gt;
-            pairs are not in a strict ascending order as described in
-            <xref target="dst-bitwise-subtlv-definition"/> and
+            If the &lt;Pattern, Mask&gt; pairs are not in a strict ascending order as
+            described in <xref target="dst-bitwise-subtlv-definition"/> and
             <xref target="src-bitwise-subtlv-definition"/>,
             the component Sub-TLV is considered MALFORMED.
           </li>
@@ -285,19 +329,19 @@
     </section>
     <section title="Use Cases" anchor="use-cases">
       <t>
-        This section describes various use cases for these filters.
+        This section describes various use cases for these filter components.
       </t>
       <section title="Symmetric Traffic Load Balancing" anchor="symmetric-load-balancing-section">
         <t>
-          Referring to <xref target="symmetric-load-balancing"/>, 
-          subscriber traffic passes through a set of inline service instances(e.g., DPIs, stateful firewalls)
-          before entering the Internet.
+          Referring to <xref target="symmetric-load-balancing"/>,
+          subscriber traffic passes through a set of inline service instances(e.g., DPIs, stateful
+          firewalls) before entering the Internet.
         </t>
         <t>
-          Inline service instances SVC0, SVC1, SVC2, and SVC3 need to process the same session in both directions.
-          Any single service instance cannot handle the traffic volume alone.
-          Assuming the traffic is distributed almost uniformly among combinations of
-          the least significant 2 bits of the subscribers' addresses.
+          Inline service instances SVC0, SVC1, SVC2, and SVC3 need to process the same session in
+          both directions. Any single service instance cannot handle the traffic volume
+          alone. Assuming the traffic is distributed almost uniformly among combinations
+          of the least significant 2 bits of the subscribers' addresses.
         </t>
           <figure title="Symmetric Traffic Load Balancing Between Routers" anchor="symmetric-load-balancing">
             <artwork type="ascii-art">
@@ -318,28 +362,33 @@
             </artwork>
           </figure>
           <t>
-            The order of fields for hashing functions is not always configurable, and different vendors implement various proprietary
-            hashing functions.
-            Therefore, hash-based load-balancing may not be suitable for this case.
+            The order of fields for hashing functions is not always configurable, and different
+            vendors implement various proprietary hashing functions.
+            Therefore, hash-based load-balancing may not be suitable.
           </t>
           <t>
-            Deploying bitwise address filters is a viable multi-vendor solution in this case. For example, we can deploy:
+            Deploying bitwise address filters is a viable multi-vendor solution in this case.
+            For example, we can deploy:
           </t>
           <t>
             On X:
           </t>
           <ul spacing="normal">
             <li>
-              FSv2 rule X0 matches the least significant 2 bits as 00 in the source address field and directs traffic to SVC0.
+              FSv2 rule X0 matches pattern 00 against the least significant 2 bits in the source
+              address field and directs traffic to SVC0.
             </li>
             <li>
-              FSv2 rule X1 matches the least significant 2 bits as 01 in the source address field and directs traffic to SVC1.
+              FSv2 rule X1 matches pattern 01 against the least significant 2 bits in the source
+              address field and directs traffic to SVC1.
             </li>
             <li>
-              FSv2 rule X2 matches the least significant 2 bits as 10 in the source address field and directs traffic to SVC2.
+              FSv2 rule X2 matches pattern 10 against the least significant 2 bits in the source
+              address field and directs traffic to SVC2.
             </li>
             <li>
-              FSv2 rule X3 matches the least significant 2 bits as 11 in the source address field and directs traffic to SVC3.
+              FSv2 rule X3 matches pattern 11 against the least significant 2 bits in the source
+              address field and directs traffic to SVC3.
             </li>
           </ul>
           <t>
@@ -347,69 +396,81 @@
           </t>
           <ul spacing="normal">
             <li>
-              FSv2 rule Y0 matches the least significant 2 bits as 00 in the destination address field and directs traffic to SVC0.
+              FSv2 rule Y0 matches pattern 00 against the least significant 2 bits in the
+              destination address field and directs traffic to SVC0.
             </li>
             <li>
-              FSv2 rule Y1 matches the least significant 2 bits as 01 in the destination address field and directs traffic to SVC1.
+              FSv2 rule Y1 matches pattern 01 against the least significant 2 bits in the
+              destination address field and directs traffic to SVC1.
             </li>
             <li>
-              FSv2 rule Y2 matches the least significant 2 bits as 10 in the destination address field and directs traffic to SVC2.
+              FSv2 rule Y2 matches pattern 10 against the least significant 2 bits in the
+              destination address field and directs traffic to SVC2.
             </li>
             <li>
-              FSv2 rule Y3 matches the least significant 2 bits as 11 in the destination address field and directs traffic to SVC3.
+              FSv2 rule Y3 matches pattern 11 against the least significant 2 bits in the
+              destination address field and directs traffic to SVC3.
             </li>
           </ul>
           <t>
-            If, instead, we want to load-balance a subset of subscribers from subnet P1/M1 only, the bitwise components also support that.
+            If, instead, we want to load-balance a subset of subscribers from subnet P1/M1 only, the
+            bitwise components also support that.
           </t>
           <t>
-            For example, FSv2 rule X0 can be modified to match both the most significant M1 bits as P1 and the least significant 2 bits as
-            00 in a single &lt;Pattern, Mask&gt; pair since the matching positions indicated by the Mask can be discontiguous as mentioned in
-            <xref target="src-bitwise-subtlv-definition"/>.
+            For example, FSv2 rule X0 can be modified to match both the most significant M1 bits as
+            P1 and the least significant 2 bits as 00 in a single &lt;Pattern, Mask&gt;
+            pair since the matching positions indicated by the Mask can be discontiguous as
+            mentioned in <xref target="src-bitwise-subtlv-definition"/>.
           </t>
           <t>
-            FSv2 rule Y0 can be modified to match both the most significant M1 bits as P1 and the least significant 2 bits as
-            00 in a single &lt;Pattern, Mask&gt; pair since the matching positions indicated by the Mask can be discontiguous as mentioned in
+            FSv2 rule Y0 can be modified to match both the most significant M1 bits as P1 and the
+            least significant 2 bits as 00 in a single &lt;Pattern, Mask&gt; pair since
+            the matching positions indicated by the Mask can be discontiguous as mentioned in
             <xref target="dst-bitwise-subtlv-definition"/>.
           </t>
           <t>
-            The matched traffic is directed to a specific service instance by various mechanisms, such as(but not limited to) the
-            following:
+            The matched traffic is directed to a specific service instance by various mechanisms,
+            such as(but not limited to) the following:
           </t>
           <ul spacing="normal">
             <li>
               RT-redirect action defined in <xref target="RFC8955"/>
             </li>
             <li>
-              Redirect-to-IP action as described in <xref target="I-D.ietf-idr-flowspec-redirect-ip"/>
+              Redirect-to-IP action as described in
+              <xref target="I-D.ietf-idr-flowspec-redirect-ip"/>
             </li>
             <li>
-              Redirect into an SR Policy as described in <xref target="I-D.ietf-idr-ts-flowspec-srv6-policy"/>
+              Redirect into an SR Policy as described in
+              <xref target="I-D.ietf-idr-ts-flowspec-srv6-policy"/>
             </li>
             <li>
-              Indirection-id redirection as described in <xref target="I-D.ietf-idr-flowspec-path-redirect"/>
+              Indirection-id redirection as described in
+              <xref target="I-D.ietf-idr-flowspec-path-redirect"/>
             </li>
           </ul>
           <t>
-            Using this approach, the bitwise filter components load-balance traffic into N service instances while keeping the same session
-            on the same instance.
+            Using this approach, the bitwise filter components load-balance traffic into N service
+            instances while keeping the same session on the same instance.
           </t>
       </section>
       <section title="Dynamic Service Scaling">
         <t>
-          Consider the same example depicted in <xref target="symmetric-load-balancing"/> .
-          If the traffic load drops and we want to scale down the service by shutting down SVC2 and SVC3 to reduce costs, we can deploy new
-          rules:
+          Consider the same example depicted in <xref target="symmetric-load-balancing"/>.
+          If the traffic load drops and we want to scale down the service by shutting down SVC2 and
+          SVC3 to reduce costs, we can deploy new rules:
         </t>
         <t>
           On X:
         </t>
         <ul spacing="normal">
           <li>
-            FSv2 rule X0 matches the least significant bit as 0 in the source address field and directs traffic to SVC0.
+            FSv2 rule X0 matches pattern 0 against the least significant bit in the source address
+            field and directs traffic to SVC0.
           </li>
           <li>
-            FSv2 rule X1 matches the least significant bit as 1 in the source address field and directs traffic to SVC1.
+            FSv2 rule X1 matches pattern 1 against the least significant bit in the source address
+            field and directs traffic to SVC1.
           </li>
         </ul>
         <t>
@@ -417,21 +478,25 @@
         </t>
         <ul spacing="normal">
           <li>
-            FSv2 rule Y0 matches the least significant bit as 0 in the destination address field and directs traffic to SVC0.
+            FSv2 rule Y0 matches pattern 0 against the least significant bit in the destination
+            address field and directs traffic to SVC0.
           </li>
           <li>
-            FSv2 rule Y1 matches the least significant bit as 1 in the destination address field and directs traffic to SVC1.
+            FSv2 rule Y1 matches pattern 1 against the least significant bit in the destination
+            address field and directs traffic to SVC1.
           </li>
         </ul>
         <t>
-          We can remove the old rules and then shut down SVC2 and SVC3 after the new rules are activated.
+          We can remove the old rules and then shut down SVC2 and SVC3 after the new rules are
+          activated.
         </t>
       </section>
       <section title="Symmetric Traffic Sampling">
         <t>
-          Some capacity-limited devices, such as DPI equipment, may benefit from symmetric traffic sampling.
-          Since these devices also require traffic from both directions, we can deploy bitwise filters to sample traffic flows by matching
-          against a set of specific least significant bits from different subnets.
+          Some capacity-limited devices, such as DPI equipment, may benefit from traffic sampling.
+          Since these devices may require traffic from both directions, we can deploy bitwise
+          filters to sample traffic flows by matching against specific least significant bits from
+          different subnets.
         </t>
       </section>
     </section>
@@ -439,65 +504,75 @@
       <t>
         This section compares the proposed solution with other existing approaches.
       </t>
-      <section title="Comparison with Existing Prefix Filters" anchor="existing-filter">
+      <section title="Comparison with Existing Prefix Filter Components" anchor="existing-filter">
         <t>
-          IPv4 Source/Destination Prefix filters defined in
+          IPv4 Source/Destination Prefix filter components defined in
           <xref target="RFC8955"/>
           and <xref target="I-D.ietf-idr-fsv2-ip-basic"/>
           cannot match the least significant bits.
         </t>
         <t>
-          IPv6 Source/Destination Prefix filters defined in 
+          IPv6 Source/Destination Prefix filter components defined in
           <xref target="RFC8956"/>
           and <xref target="I-D.ietf-idr-fsv2-ip-basic"/>
           can either match the least significant bits or the IPv6 Prefix, but not both.
         </t>
         <t>
-          These filters may not be suitable for the use cases described in <xref target="use-cases"/>
-          without intensive real-time traffic monitoring mechanisms for every possible source/destination prefix.
+          These components may not be suitable for the use cases described in
+          <xref target="use-cases"/>
+          without intensive real-time traffic monitoring mechanisms for every possible
+          source/destination prefix.
           The manageability and flexibility are not as good as the proposed solution, either.
         </t>
         <t>
-          Since the bitwise filter component provides both prefix and bitwise matching capabilities(as briefly described in Section 3.1), it
+          Since the bitwise filter component provides both prefix and bitwise matching
+          capabilities(as briefly described in Section 3.1), it
           is the recommended component for matching both.
         </t>
         <t>
-          If only prefix matching is required, using filters defined in [RFC8955], [RFC8956], or [I-D.ietf-idr-fsv2-ip-basic] is more
-          efficient and recommended.
+          If only prefix matching is required, using filters defined in
+          <xref target="RFC8955"/>, <xref target="RFC8956"/>,
+          or <xref target="I-D.ietf-idr-fsv2-ip-basic"/>
+          is more efficient and recommended.
         </t>
       </section>
-      <section title="Comparison with the Content Filter">
+      <section title="Comparison with the Content Filter Component">
         <t>
-          The content filter defined in
+          The content filter component defined in
           <xref target="I-D.cui-idr-content-filter-flowspec"/>
           also provides the bitwise matching capability.
-          Although the filter supports bitwise matching against any position in the packet, address matching is not its primary design goal.             Manual calculation of offsets is required to use this filter.
-          Therefore, it may not be optimal for scenarios that match address fields only.
+          Although the component supports bitwise matching against any position in the packet,
+          address matching is not its primary design goal.
+          Manual offset calculation is required to use this filter component.
+          Therefore, the bitwise matching-based solution is more optimal for this scenario.
         </t>
       </section>
       <section title="Comparison with the Hash-based ECMP">
         <t>
-          With the following conditions met, traditional hash-based ECMP may be used for the scenario described in
-          <xref target="symmetric-load-balancing-section"/>.
+          With the following conditions met, traditional hash-based ECMP may be used for the
+          scenario described in <xref target="symmetric-load-balancing-section"/>.
         </t>
         <ul spacing="normal">
           <li>
-            Routers X and Y implement the same hashing algorithm for ECMP, which usually means both routers are of the same vendor.
+            Routers X and Y implement the same hashing algorithm for ECMP, which usually means they
+            are from the same vendor.
           </li>
           <li>
-            The order of the fields for hashing must be reversible so that the hashing outcome will be on the same ECMP member for both
-            directions.
+            The order of the fields for hashing must be reversible.
+            Therefore, the hashing outcome for the same session will be on the same ECMP member for
+            both directions.
           </li>
           <li>
             A mechanism to signal the order of ECMP members is needed.
-            The BGP MultiNexthop(MNH) attribute defined in
-            <xref target="I-D.ietf-idr-multinexthop-attribute"/>
+            The BGP MultiNexthop(MNH) attribute, as defined in
+            <xref target="I-D.ietf-idr-multinexthop-attribute"/>,
             can distribute such information.
           </li>
         </ul>
         <t>
-          Even with all conditions met, we cannot determine which member a specific packet passes through 
-          before putting it into the router unless the router provides an interface to query that.
+          Even with all conditions met, before the packet enters the router, we cannot determine
+          which ECMP member it passes through unless the router provides an interface to query that
+          beforehand.
         </t>
         <t>
           Therefore, the bitwise matching filter-based solution is more suitable for this scenario.
@@ -506,29 +581,45 @@
     </section>
     <section anchor="Deployment" title="Deployment Guidelines">
       <t>
-        The filter defined in this document matches against arbitrary bits in the address fields.
-        While syntactically this filter does not conflict with existing <xref target="RFC8955"/>/<xref target="RFC8956"/> prefix filters,
-        using either the bitwise filter or the existing filter as described in <xref target="existing-filter"/> is recommended.
+        The filter component defined in this document matches against arbitrary bit positions in the
+        address fields.
+        Syntactically, this component does not conflict with the existing
+        <xref target="RFC8955"/> /<xref target="RFC8956"/> prefix filter component;
+        however, using either the bitwise filter or the existing filter as described in
+        <xref target="existing-filter"/> is recommended.
       </t>
       <t>
-        When deployed with redirection actions, these FS rules are actually PBR rules.
-        Since these rules bypass the typical routing lookups just as typical PBR rules do, it is possible to form forwarding loops.
-        User discretion is required.
+        The general guideline is:
+      </t>
+      <ul>
+        <li>
+          If only single prefix-matching is needed, use the existing filter components.
+          It is more encoding-wise efficient.
+        </li>
+        <li>
+          Use the bitwise filter components otherwise. Since it provides a union of the
+          listed &lt;Pattern, Mask&gt; pairs.
+        </li>
+      </ul>
+      <t>
+        When deployed with redirection actions, these rules actually become PBR rules.
+        Since these rules bypass the typical routing lookups, just like typical PBR rules, it is
+        possible to form forwarding loops. User discretion is required.
       </t>
       <t>
-        If deployed with redirection actions and there are ECMPs to the redirection destination, the matching packets are subject to
-        hash-based load-balancing towards that destination.
+        If deployed with redirection actions and there are ECMPs to the redirection destination,
+        matched packets are subject to hash-based load-balancing towards that destination.
       </t>
       <t>
-        While some platforms are capable of processing bitwise filters at line-rate speeds, some aren't.
-        Therefore, before deployments, it is recommended to determine the performance of bitwise matching.
+        While some platforms process bitwise filter components at line-rate speeds, some don't.
+        Therefore, it is recommended to determine the performance of the bitwise match filter
+        components beforehand.
       </t>
     </section>
     <section anchor="IANA" title="IANA Considerations">
       <t>
-          IANA is requested to indicate [this draft] as a reference on the 
-             following assignments in the Flow Specification Component Types 
-             Registry:
+        IANA is requested to indicate [this document] as a reference on the
+        following assignments in the "BGP FSv2 IP Extended Component Types" Registry:
       </t>
       <table>
         <thead>
@@ -544,13 +635,13 @@
             <td align="right">TBD1</td>
             <td align="left">Bitwise Destination IPv4 Address Filter</td>
             <td align="left">Bitwise Destination IPv6 Address Filter</td>
-            <td align="left">[this draft]</td>
+            <td align="left">[this document]</td>
           </tr>
           <tr>
             <td align="right">TBD2</td>
             <td align="left">Bitwise Source IPv4 Address Filter</td>
             <td align="left">Bitwise Source IPv6 Address Filter</td>
-            <td align="left">[this draft]</td>
+            <td align="left">[this document]</td>
           </tr>
         </tbody>
       </table>
@@ -558,7 +649,17 @@
     
     <section anchor="Security" title="Security Considerations">
       <t>
-        No new security issues are introduced to the BGP protocol by this specification.
+        The security considerations discussed in 
+        <xref target="RFC8955"/>,
+        <xref target="RFC8956"/>,
+        <xref target="I-D.ietf-idr-fsv2-ip-basic"/>,
+        and <xref target="I-D.hares-idr-fsv2-more-ip-filters"/>
+        also apply to this document.
+      </t>
+      <t>
+        If deployed with redirection actions, the security considerations discussed in
+        <xref target="I-D.ietf-idr-flowspec-redirect-ip"/>
+        should also be evaluated.
       </t>
     </section>
   </middle>
