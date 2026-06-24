@@ -26,6 +26,18 @@
         <email>shares@ndzh.com</email>
       </address>
     </author>
+    <author initials="Y." surname="Gao" fullname="Yujia Gao">
+      <organization>Zhongguancun Laboratory</organization>
+      <address>
+        <postal>
+          <region>Beijing</region>
+          <code>100094</code>
+          <country>China</country>
+        </postal>
+        <phone>+86-185-1028-7458</phone>
+        <email>gaoyj@zgclab.edu.cn</email>
+      </address>
+    </author>
     <date year="2026"/>
     <area>Routing Area</area>
     <workgroup>IDR Working Group</workgroup>
