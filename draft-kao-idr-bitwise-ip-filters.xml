@@ -398,6 +398,10 @@
             the component Sub-TLV is considered MALFORMED.
           </li>
         </ul>
+        <t>
+          The error handling procedures for NLRIs with MALFORMED Sub-TLVs are defined in
+          <xref target="I-D.ietf-idr-fsv2-ip-basic"/>.
+        </t>
       </section>
     </section>
     <section title="Use Cases" anchor="use-cases">
