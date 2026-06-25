@@ -289,10 +289,22 @@
       </section>
       <section title="Comparing the Sub-TLVs between NLRIs">
         <t>
-          When comparing two NLRIs with the same type of bitwise matching filter component, the
-          following procedures apply:
+          This section describes the procedures for comparing two Sub-TLVs of the same type in two
+          different FSv2 NLRIs.
+          Note that inside every individual Sub-TLV, each &lt;Pattern,
+          Mask&gt; pair has already been sorted by the procedures defined in
+          <xref target="dst-bitwise-subtlv-definition"/>
+          and <xref target="src-bitwise-subtlv-definition"/>.
+        </t>
+        <t>
+          When comparing two NLRIs with the same type of bitwise matching filter component Sub-TLV,
+          the following procedures apply:
         </t>
         <ol>
+          <li>
+            Every bitwise filter component Sub-TLV, regardless of its length, is treated as a binary
+            string.
+          </li>
           <li>
             Compare the bitwise filter component Sub-TLVs of the same type from each NLRI as binary
             strings using the memcmp() function defined by <xref target="ISO_IEC_9899"/>.
