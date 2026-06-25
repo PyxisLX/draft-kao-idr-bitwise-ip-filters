@@ -150,10 +150,25 @@
           <dd>TBD1</dd>
           <dt>Description: </dt>
           <dd>
-            This component matches against designated bits in the destination address field.
-            It contains a list of &lt;Pattern, Mask&gt; pairs.
-            If the destination address matches any pair in the list, this component is considered a
-            match.
+            <t>
+              This component matches against designated bits in the destination address field.
+            </t>
+            <t>
+              It contains a list of &lt;Pattern, Mask&gt; pairs.
+              If the destination address matches any pair in the list, this component is considered
+              a match.
+            </t>
+            <t>
+              A destination address D is a match for a pair &lt;Pattern, Mask&gt; if
+              and only if:
+            </t>
+            <t>
+              (D &amp; Mask) = (Pattern &amp; Mask)
+            </t>
+            <t>
+              where &amp; is the bitwise AND
+              operator.
+            </t>
           </dd>
           <dt>The field that the component targets in the IPv4 Packets: </dt>
           <dd>Destination address field</dd>
@@ -224,10 +239,25 @@
           <dd>TBD2</dd>
           <dt>Description: </dt>
           <dd>
-            This component matches against designated bits in the source address field.
-            It contains a list of &lt;Pattern, Mask&gt; pairs.
-            If the source address matches any pair in the list, this component is considered a
-            match.
+            <t>
+              This component matches against designated bits in the source address field.
+            </t>
+            <t>
+              It contains a list of &lt;Pattern, Mask&gt; pairs.
+              If the source address matches any pair in the list, this component is considered a
+              match.
+            </t>
+            <t>
+              A source address S is a match for a pair &lt;Pattern, Mask&gt; if
+              and only if:
+            </t>
+            <t>
+              (S &amp; Mask) = (Pattern &amp; Mask)
+            </t>
+            <t>
+              where &amp; is the bitwise AND
+              operator.
+            </t>
           </dd>
           <dt>The field that the component targets in the IPv4 Packets: </dt>
           <dd>Source address field</dd>
@@ -280,7 +310,8 @@
           </dd>
           <dt>Conflicts with other filters: </dt>
           <dd>
-            None. However, it is recommended to use either the bitwise filter
+            None.
+            However, it is recommended to use either the bitwise filter
             or the "Source Prefix filter" defined in
             <xref target="I-D.ietf-idr-fsv2-ip-basic"/>, not both.
             See also in <xref target="existing-filter"/>.
