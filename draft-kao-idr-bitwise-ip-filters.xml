@@ -337,6 +337,31 @@
             the component Sub-TLV is considered MALFORMED.
           </li>
         </ul>
+        <t>
+          The error handling procedures for NLRIs with MALFORMED Sub-TLVs are defined in
+          <xref target="I-D.ietf-idr-fsv2-ip-basic"/>.
+        </t>
+      </section>
+      <section title="Interactions with Existing Filter Components">
+        <t>
+          This section describes the interactions with the existing IPv4/IPv6 Source/Destination
+          Prefix filter components defined in
+          <xref target="I-D.ietf-idr-fsv2-ip-basic"/>.
+        </t>
+        <t>
+          When a filter component defined in this document resides in an NLRI containing other
+          existing prefix filter components, typical logical AND semantics between components should
+          be honored.
+        </t>
+        <t>
+          For example, if there are a source address bitwise filter component and a source prefix
+          filter component in the same NLRI, a source address is considered a match if it matches
+          both components.
+        </t>
+        <t>
+          However, it is recommended to use only one filter component for a packet header field.
+          See also in <xref target="existing-filter"/>.
+        </t>
       </section>
     </section>
     <section title="Use Cases" anchor="use-cases">
