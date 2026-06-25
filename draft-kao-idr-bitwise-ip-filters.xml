@@ -146,7 +146,7 @@
           <dd>
             This section defines bitwise matches for the destination address field.
           </dd>
-          <dt>Component type: </dt>
+          <dt>Component Type: </dt>
           <dd>TBD1</dd>
           <dt>Description: </dt>
           <dd>
@@ -167,8 +167,8 @@
           </dd>
           <dt>Encoding of Component Value field: </dt>
           <dd>
-            The match is encoded as a list: &lt;Pattern, Mask&gt;, &lt;Pattern, Mask&gt;, ...,
-            &lt;Pattern, Mask&gt;
+            The value field is encoded as a sorted list with no repetition of pairs: [ &lt;Pattern,
+            Mask&gt;, &lt;Pattern, Mask&gt;, ..., &lt;Pattern, Mask&gt; ]
           </dd>
         </dl>
         <dl>
@@ -185,10 +185,17 @@
           <dd>
             a 4-octet bit mask for AFI = 1 and a 16-octet bit mask for AFI = 2.
             It indicates the bit positions to match with the Pattern field.
-            The bit positions can be discontiguous.
+            Only bit positions set to 1 in the Mask field are considered for matching.
+            These bit positions can be discontiguous.
           </dd>
           <dt>Construction of the list: </dt>
           <dd>
+            <t>
+              The following procedures guarantee the same result for the same list of &lt;Pattern,
+              Mask&gt; pairs.
+              Note that two pairs are identical if they are encoded exactly the same using the
+              encoding described above.
+            </t>
             <ul>
               <li>
                 Each &lt;Pattern, Mask&gt; pair is treated as a binary string.
@@ -222,7 +229,7 @@
           <dd>
             This section defines bitwise matches for the source address field.
           </dd>
-          <dt>Component type: </dt>
+          <dt>Component Type: </dt>
           <dd>TBD2</dd>
           <dt>Description: </dt>
           <dd>
@@ -243,8 +250,8 @@
           </dd>
           <dt>Encoding of Component Value field: </dt>
           <dd>
-            The match is encoded as a list: &lt;Pattern, Mask&gt;, &lt;Pattern, Mask&gt;, ...,
-            &lt;Pattern, Mask&gt;
+            The value field is encoded as a sorted list with no repetition of pairs: [ &lt;Pattern,
+            Mask&gt;, &lt;Pattern, Mask&gt;, ..., &lt;Pattern, Mask&gt; ]
           </dd>
         </dl>
         <dl>
@@ -261,10 +268,17 @@
           <dd>
             a 4-octet bit mask for AFI = 1 and a 16-octet bit mask for AFI = 2.
             It indicates the bit positions to match with the Pattern field.
-            The bit positions can be discontiguous.
+            Only bit positions set to 1 in the Mask field are considered for matching.
+            These bit positions can be discontiguous.
           </dd>
           <dt>Construction of the list: </dt>
           <dd>
+            <t>
+              The following procedures guarantee the same result for the same list of &lt;Pattern,
+              Mask&gt; pairs.
+              Note that two pairs are identical if they are encoded exactly the same using the
+              encoding described above.
+            </t>
             <ul>
               <li>
                 Each &lt;Pattern, Mask&gt; pair is treated as a binary string.
