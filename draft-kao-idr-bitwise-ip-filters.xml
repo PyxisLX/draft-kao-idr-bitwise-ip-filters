@@ -176,14 +176,16 @@
           <dd>
             a 4-octet bit string for AFI = 1 and a 16-octet bit string for AFI = 2.
             It indicates the destination address value to match.
+            Only bit positions set to 1 in the Mask field are considered for matching; other bit
+            positions are ignored.
+            Ignored bit positions MUST be set to zero on transmission and MUST be treated as zero on
+            receipt.
           </dd>
           <dt>Mask: </dt>
           <dd>
             a 4-octet bit mask for AFI = 1 and a 16-octet bit mask for AFI = 2.
             It indicates the bit positions to match with the Pattern field.
             The bit positions can be discontiguous.
-            Only bit positions set to 1 in the Mask field are considered for matching; other bit
-            positions are ignored.
           </dd>
           <dt>Construction of the list: </dt>
           <dd>
@@ -250,14 +252,16 @@
           <dd>
             a 4-octet bit string for AFI = 1 and a 16-octet bit string for AFI = 2.
             It indicates the source address value to match.
+            Only bit positions set to 1 in the Mask field are considered for matching; other bit
+            positions are ignored.
+            Ignored bit positions MUST be set to zero on transmission and MUST be treated as zero on
+            receipt.
           </dd>
           <dt>Mask: </dt>
           <dd>
             a 4-octet bit mask for AFI = 1 and a 16-octet bit mask for AFI = 2.
             It indicates the bit positions to match with the Pattern field.
             The bit positions can be discontiguous.
-            Only bit positions set to 1 in the Mask field are considered for matching; other bit
-            positions are ignored.
           </dd>
           <dt>Construction of the list: </dt>
           <dd>
