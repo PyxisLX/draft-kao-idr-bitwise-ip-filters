@@ -79,14 +79,10 @@
         The BGP Flow Specification version 2 (FSv2) <xref target="I-D.ietf-idr-fsv2-ip-basic"/>
         is an enhancement to BGP-FS.
         It allows a user-defined order of filters.
-        The Extended IP Filters defined in <xref target="I-D.hares-idr-fsv2-more-ip-filters"/>
-        further extend the filter types of FSv2.
       </t>
       <t>
         This document defines the bitwise match filter component Sub-TLVs for source and destination
         IPv4/IPv6 address fields.
-        These Sub-TLVs fall in the category of the Extended IP Filters TLV defined in
-        <xref target="I-D.hares-idr-fsv2-more-ip-filters"/>.
         Using these Sub-TLVs allows operators to match arbitrary bit positions against the
         corresponding address fields.
         We can symmetrically load-balance traffic using this property if the traffic is distributed
@@ -136,8 +132,6 @@
     <section title="Bitwise Address Filters for FSv2">
       <t>
         This section defines the bitwise address filter component Sub-TLVs for FSv2.
-        These Sub-TLVs are classified as IP Extended Filters in
-        <xref target="I-D.hares-idr-fsv2-more-ip-filters"/>.
         Sub-TLVs for both source and destination address fields are defined.
       </t>
       <section title="Destination Address Bitwise Filter Component Sub-TLV" anchor="dst-bitwise-subtlv-definition">
@@ -682,7 +676,7 @@
         The filter component defined in this document matches against arbitrary bit positions in the
         address fields.
         Syntactically, this component does not conflict with the existing
-        <xref target="RFC8955"/> /<xref target="RFC8956"/> prefix filter component;
+        <xref target="RFC8955"/>/<xref target="RFC8956"/> prefix filter component;
         however, using either the bitwise filter or the existing filter as described in
         <xref target="existing-filter"/> is recommended.
       </t>
@@ -717,7 +711,7 @@
     <section anchor="IANA" title="IANA Considerations">
       <t>
         IANA is requested to indicate [this document] as a reference on the
-        following assignments in the "BGP FSv2 IP Extended Component Types" Registry:
+        following assignments in the "BGP FSv2 IP Basic Component Types" registry:
       </t>
       <table>
         <thead>
@@ -750,8 +744,7 @@
         The security considerations discussed in 
         <xref target="RFC8955"/>,
         <xref target="RFC8956"/>,
-        <xref target="I-D.ietf-idr-fsv2-ip-basic"/>,
-        and <xref target="I-D.hares-idr-fsv2-more-ip-filters"/>
+        and <xref target="I-D.ietf-idr-fsv2-ip-basic"/>
         also apply to this document.
       </t>
       <t>
@@ -769,7 +762,6 @@
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8955.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8956.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-fsv2-ip-basic.xml"/>
-      <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.hares-idr-fsv2-more-ip-filters.xml"/>
       <reference anchor="ISO_IEC_9899" quoteTitle="true" derivedAnchor="ISO_IEC_9899">
         <front>
           <title>Information technology -- Programming languages -- C</title>
