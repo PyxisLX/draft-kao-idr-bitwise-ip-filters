@@ -712,7 +712,7 @@
       <t>
         IANA is requested to indicate [this document] as a reference on the
         following assignments in the "BGP FSv2 IP Basic Component Types" registry
-        (which will be created by <xref target="I-D.ietf-idr-fsv2-ip-basic"/>:
+        (which will be created by <xref target="I-D.ietf-idr-fsv2-ip-basic"/>):
       </t>
       <table>
         <thead>
