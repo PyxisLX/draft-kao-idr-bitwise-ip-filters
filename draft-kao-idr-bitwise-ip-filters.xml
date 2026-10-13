@@ -81,8 +81,8 @@
         It allows a user-defined order of filters.
       </t>
       <t>
-        This document defines the bitwise match filter component Sub-TLVs for source and destination
-        IPv4/IPv6 address fields.
+        This document defines the FSv2 bitwise match filter component Sub-TLVs for source and
+        destination IPv4/IPv6 address fields.
         Using these Sub-TLVs allows operators to match arbitrary bit positions against the
         corresponding address fields.
         We can symmetrically load-balance traffic using this property if the traffic is distributed
@@ -134,18 +134,20 @@
         This section defines the bitwise address filter component Sub-TLVs for FSv2.
         Sub-TLVs for both source and destination address fields are defined.
       </t>
-      <section title="Destination Address Bitwise Filter Component Sub-TLV" anchor="dst-bitwise-subtlv-definition">
+
+      <section title="IPv4 Destination Address Bitwise Filter Component Sub-TLV" anchor="ipv4-dst-bitwise-subtlv-definition">
         <dl>
           <dt>Summary: </dt>
           <dd>
-            This section defines bitwise matches for the destination address field.
+            This section defines bitwise matches for the IPv4 destination address field.
+            This Sub-TLV belongs to the IPv4 Filter Family as defined in <xref target="I-D.ietf-idr-fsv2-ip-basic"/>.
           </dd>
           <dt>Component Type: </dt>
           <dd>TBD1</dd>
           <dt>Description: </dt>
           <dd>
             <t>
-              This component matches against designated bits in the destination address field.
+              This component matches against designated bits in the IPv4 destination address field.
             </t>
             <t>
               It contains a list of &lt;Pattern, Mask&gt; pairs.
@@ -166,13 +168,10 @@
           </dd>
           <dt>The field that the component targets in the IPv4 Packets: </dt>
           <dd>Destination address field</dd>
-          <dt>The field that the component targets in the IPv6 Packets: </dt>
-          <dd>Destination address field</dd>
           <dt>Length: </dt>
           <dd>
             This field indicates the length of the value field in octets. The length is
-            a nonzero multiple of 8 for AFI = 1 (IPv4) or a nonzero multiple of 32 for AFI = 2
-            (IPv6).
+            a nonzero multiple of 8.
           </dd>
           <dt>Encoding of Component Value field: </dt>
           <dd>
@@ -183,7 +182,7 @@
         <dl>
           <dt>Pattern: </dt>
           <dd>
-            a 4-octet bit string for AFI = 1 and a 16-octet bit string for AFI = 2.
+            A 4-octet bit string.
             It indicates the destination address value to match.
             Only bit positions set to 1 in the Mask field are considered for matching; other bit
             positions are ignored.
@@ -192,63 +191,137 @@
           </dd>
           <dt>Mask: </dt>
           <dd>
-            a 4-octet bit mask for AFI = 1 and a 16-octet bit mask for AFI = 2.
+            A 4-octet bit mask.
             It indicates the bit positions to match with the Pattern field.
             Only bit positions set to 1 in the Mask field are considered for matching.
             These bit positions can be discontiguous.
           </dd>
           <dt>Construction of the list: </dt>
           <dd>
-            <t>
-              The following procedures guarantee the same result for the same list of &lt;Pattern,
-              Mask&gt; pairs.
-              Note that two pairs are identical if they are encoded exactly the same using the
-              encoding described above.
-            </t>
-            <ul>
-              <li>
-                Each &lt;Pattern, Mask&gt; pair is treated as a binary string.
-              </li>
-              <li>
-                Each pair MUST be present no more than once in a single component Sub-TLV.
-              </li>
-              <li>
-                Each pair is compared using the memcmp() function as defined in
-                <xref target="ISO_IEC_9899"/>.
-              </li>
-              <li>
-                Each pair MUST follow strict ascending order by the memcmp() results.
-                That is, the lower pair MUST precede the higher pairs.
-              </li>
-            </ul>
+            Please refer to <xref target="construction-of-the-list"/>.
           </dd>
           <dt>Conflicts with other filters: </dt>
           <dd>
-            None.
-            However, it is recommended to use either the bitwise filter
-            or the "Destination Prefix filter" defined in
+            None. However, it is recommended to use either the "IPv4 Destination Address Bitwise
+            Filter" or the "IPv4 Destination Prefix filter" defined in
             <xref target="I-D.ietf-idr-fsv2-ip-basic"/>, not both.
-            See also in <xref target="existing-filter"/>.
+            See also <xref target="existing-filter"/>.
           </dd>
         </dl>
+        <section title="Construction of the List" anchor="construction-of-the-list">
+          <t>
+            The following procedures guarantee the same result for the same list of &lt;Pattern,
+            Mask&gt; pairs. Note that two pairs are identical if they are encoded
+            exactly the same using the encoding described.
+          </t>
+          <ul>
+            <li>
+              Each &lt;Pattern, Mask&gt; pair is treated as a binary string.
+            </li>
+            <li>
+              Each pair MUST be present no more than once in a single component Sub-TLV.
+            </li>
+            <li>
+              Each pair is compared using the memcmp() function as defined in
+              <xref target="ISO_IEC_9899"/>.
+            </li>
+            <li>
+              Each pair MUST follow strict ascending order by the memcmp() results.
+              That is, the lower pair MUST precede the higher pairs.
+            </li>
+          </ul>
+        </section>
       </section>
-      <section title="Source Address Bitwise Filter Component Sub-TLV" anchor="src-bitwise-subtlv-definition">
+      <section title="IPv6 Destination Address Bitwise Filter Component Sub-TLV" anchor="ipv6-dst-bitwise-subtlv-definition">
         <dl>
           <dt>Summary: </dt>
           <dd>
-            This section defines bitwise matches for the source address field.
+            This section defines bitwise matches for the IPv6 destination address field.
+            This Sub-TLV belongs to the IPv6 Basic Filter Family as defined in
+            <xref target="I-D.ietf-idr-fsv2-ip-basic"/>.
           </dd>
           <dt>Component Type: </dt>
           <dd>TBD2</dd>
           <dt>Description: </dt>
           <dd>
             <t>
-              This component matches against designated bits in the source address field.
+              This component matches against designated bits in the IPv6 destination address field.
             </t>
             <t>
               It contains a list of &lt;Pattern, Mask&gt; pairs.
-              If the source address matches any pair in the list, this component is considered a
-              match.
+              If the destination address matches any pair in the list, this component is considered
+              a match.
+            </t>
+            <t>
+              A destination address D is a match for a pair &lt;Pattern, Mask&gt; if
+              and only if:
+            </t>
+            <t>
+              (D &amp; Mask) = (Pattern &amp; Mask)
+            </t>
+            <t>
+              where &amp; is the bitwise AND
+              operator.
+            </t>
+          </dd>
+          <dt>The field that the component targets in the IPv6 Packets: </dt>
+          <dd>Destination address field</dd>
+          <dt>Length: </dt>
+          <dd>
+            This field indicates the length of the value field in octets. The length is
+            a nonzero multiple of 32.
+          </dd>
+          <dt>Encoding of Component Value field: </dt>
+          <dd>
+            The value field is encoded as a sorted list with no repetition of pairs: [ &lt;Pattern,
+            Mask&gt;, &lt;Pattern, Mask&gt;, ..., &lt;Pattern, Mask&gt; ]
+          </dd>
+        </dl>
+        <dl>
+          <dt>Pattern: </dt>
+          <dd>
+            A 16-octet bit string. It indicates the destination address value to match.
+            Only bit positions set to 1 in the Mask field are considered for matching; other bit
+            positions are ignored. Ignored bit positions MUST be set to zero on
+            transmission and MUST be treated as zero on receipt.
+          </dd>
+          <dt>Mask: </dt>
+          <dd>
+            A 16-octet bit mask. It indicates the bit positions to match with the
+            Pattern field. Only bit positions set to 1 in the Mask field are considered
+            for matching. These bit positions can be discontiguous.
+          </dd>
+          <dt>Construction of the list: </dt>
+          <dd>
+            Please refer to <xref target="construction-of-the-list"/>.
+          </dd>
+          <dt>Conflicts with other filters: </dt>
+          <dd>
+            None. However, it is recommended to use either the "IPv6 Destination Address Bitwise
+            Filter" or the "IPv6 Destination Prefix filter" defined in
+            <xref target="I-D.ietf-idr-fsv2-ip-basic"/>, not both.
+            See also <xref target="existing-filter"/>.
+          </dd>
+        </dl>
+      </section>
+      <section title="IPv4 Source Address Bitwise Filter Component Sub-TLV" anchor="ipv4-src-bitwise-subtlv-definition">
+        <dl>
+          <dt>Summary: </dt>
+          <dd>
+            This section defines bitwise matches for the IPv4 source address field.
+            This Sub-TLV belongs to the IPv4 Filter Family as defined in <xref target="I-D.ietf-idr-fsv2-ip-basic"/>.
+          </dd>
+          <dt>Component Type: </dt>
+          <dd>TBD3</dd>
+          <dt>Description: </dt>
+          <dd>
+            <t>
+              This component matches against designated bits in the IPv4 source address field.
+            </t>
+            <t>
+              It contains a list of &lt;Pattern, Mask&gt; pairs.
+              If the source address matches any pair in the list, this component is considered
+              a match.
             </t>
             <t>
               A source address S is a match for a pair &lt;Pattern, Mask&gt; if
@@ -264,13 +337,10 @@
           </dd>
           <dt>The field that the component targets in the IPv4 Packets: </dt>
           <dd>Source address field</dd>
-          <dt>The field that the component targets in the IPv6 Packets: </dt>
-          <dd>Source address field</dd>
           <dt>Length: </dt>
           <dd>
             This field indicates the length of the value field in octets. The length is
-            a nonzero multiple of 8 for AFI = 1 (IPv4) or a nonzero multiple of 32 for AFI = 2
-            (IPv6).
+            a nonzero multiple of 8.
           </dd>
           <dt>Encoding of Component Value field: </dt>
           <dd>
@@ -281,7 +351,7 @@
         <dl>
           <dt>Pattern: </dt>
           <dd>
-            a 4-octet bit string for AFI = 1 and a 16-octet bit string for AFI = 2.
+            A 4-octet bit string.
             It indicates the source address value to match.
             Only bit positions set to 1 in the Mask field are considered for matching; other bit
             positions are ignored.
@@ -290,43 +360,93 @@
           </dd>
           <dt>Mask: </dt>
           <dd>
-            a 4-octet bit mask for AFI = 1 and a 16-octet bit mask for AFI = 2.
+            A 4-octet bit mask.
             It indicates the bit positions to match with the Pattern field.
             Only bit positions set to 1 in the Mask field are considered for matching.
             These bit positions can be discontiguous.
           </dd>
           <dt>Construction of the list: </dt>
           <dd>
-            <t>
-              The following procedures guarantee the same result for the same list of &lt;Pattern,
-              Mask&gt; pairs.
-              Note that two pairs are identical if they are encoded exactly the same using the
-              encoding described above.
-            </t>
-            <ul>
-              <li>
-                Each &lt;Pattern, Mask&gt; pair is treated as a binary string.
-              </li>
-              <li>
-                Each pair MUST be present no more than once in a single component Sub-TLV.
-              </li>
-              <li>
-                Each pair is compared using the memcmp() function as defined in
-                <xref target="ISO_IEC_9899"/>.
-              </li>
-              <li>
-                Each pair MUST follow strict ascending order by the memcmp() results.
-                That is, the lower pair MUST precede the higher pairs.
-              </li>
-            </ul>
+            Please refer to <xref target="construction-of-the-list"/>.
           </dd>
           <dt>Conflicts with other filters: </dt>
           <dd>
-            None.
-            However, it is recommended to use either the bitwise filter
-            or the "Source Prefix filter" defined in
+            None. However, it is recommended to use either the "IPv4 Source Address Bitwise
+            Filter" or the "IPv4 Source Prefix Filter" defined in
             <xref target="I-D.ietf-idr-fsv2-ip-basic"/>, not both.
-            See also in <xref target="existing-filter"/>.
+            See also <xref target="existing-filter"/>.
+          </dd>
+        </dl>
+      </section>
+      <section title="IPv6 Source Address Bitwise Filter Component Sub-TLV" anchor="ipv6-src-bitwise-subtlv-definition">
+        <dl>
+          <dt>Summary: </dt>
+          <dd>
+            This section defines bitwise matches for the IPv6 source address field.
+            This Sub-TLV belongs to the IPv6 Basic Filter Family as defined in
+            <xref target="I-D.ietf-idr-fsv2-ip-basic"/>.
+          </dd>
+          <dt>Component Type: </dt>
+          <dd>TBD4</dd>
+          <dt>Description: </dt>
+          <dd>
+            <t>
+              This component matches against designated bits in the IPv6 source address field.
+            </t>
+            <t>
+              It contains a list of &lt;Pattern, Mask&gt; pairs.
+              If the source address matches any pair in the list, this component is considered
+              a match.
+            </t>
+            <t>
+              A source address S is a match for a pair &lt;Pattern, Mask&gt; if
+              and only if:
+            </t>
+            <t>
+              (S &amp; Mask) = (Pattern &amp; Mask)
+            </t>
+            <t>
+              where &amp; is the bitwise AND
+              operator.
+            </t>
+          </dd>
+          <dt>The field that the component targets in the IPv6 Packets: </dt>
+          <dd>Source address field</dd>
+          <dt>Length: </dt>
+          <dd>
+            This field indicates the length of the value field in octets. The length is
+            a nonzero multiple of 32.
+          </dd>
+          <dt>Encoding of Component Value field: </dt>
+          <dd>
+            The value field is encoded as a sorted list with no repetition of pairs: [ &lt;Pattern,
+            Mask&gt;, &lt;Pattern, Mask&gt;, ..., &lt;Pattern, Mask&gt; ]
+          </dd>
+        </dl>
+        <dl>
+          <dt>Pattern: </dt>
+          <dd>
+            A 16-octet bit string. It indicates the source address value to match.
+            Only bit positions set to 1 in the Mask field are considered for matching; other bit
+            positions are ignored. Ignored bit positions MUST be set to zero on
+            transmission and MUST be treated as zero on receipt.
+          </dd>
+          <dt>Mask: </dt>
+          <dd>
+            A 16-octet bit mask. It indicates the bit positions to match with the
+            Pattern field. Only bit positions set to 1 in the Mask field are considered
+            for matching. These bit positions can be discontiguous.
+          </dd>
+          <dt>Construction of the list: </dt>
+          <dd>
+            Please refer to <xref target="construction-of-the-list"/>.
+          </dd>
+          <dt>Conflicts with other filters: </dt>
+          <dd>
+            None. However, it is recommended to use either the "IPv6 Source Address Bitwise
+            Filter" or the "IPv6 Source Prefix filter" defined in
+            <xref target="I-D.ietf-idr-fsv2-ip-basic"/>, not both.
+            See also <xref target="existing-filter"/>.
           </dd>
         </dl>
       </section>
@@ -336,8 +456,10 @@
           different FSv2 NLRIs.
           Note that inside every individual Sub-TLV, each &lt;Pattern,
           Mask&gt; pair has already been sorted by the procedures defined in
-          <xref target="dst-bitwise-subtlv-definition"/>
-          and <xref target="src-bitwise-subtlv-definition"/>.
+          <xref target="ipv4-dst-bitwise-subtlv-definition"/>,
+          <xref target="ipv6-dst-bitwise-subtlv-definition"/>,
+          <xref target="ipv4-src-bitwise-subtlv-definition"/>,
+          and <xref target="ipv6-src-bitwise-subtlv-definition"/>.
         </t>
         <t>
           When comparing two NLRIs with the same type of bitwise matching filter component Sub-TLV,
@@ -356,7 +478,7 @@
             For strings of equal length, the lowest string has the highest precedence.
           </li>
           <li>
-            <t>For strings of different lengths, compare the common prefix of the string only.</t>
+            <t>For strings of different lengths, compare only the common prefix of the strings.</t>
             <ul>
               <li>
                 If the common prefix is unequal, the string with the lowest common prefix has higher
@@ -377,9 +499,10 @@
         </t>
         <ul>
           <li>
-            If the length is not a nonzero multiple of 8 for AFI = 1, the component Sub-TLV is
-            considered MALFORMED. Similarly, if the length is not a nonzero multiple of
-            32 for AFI = 2, the component Sub-TLV is also considered MALFORMED.
+            If the length is not a nonzero multiple of 8 for Sub-TLVs belonging to the IPv4 Filter
+            Family, the component Sub-TLV is considered MALFORMED.
+            Similarly, if the length is not a nonzero multiple of 32 for Sub-TLVs belonging to the
+            IPv6 Basic Filter Family, the component Sub-TLV is considered MALFORMED.
           </li>
           <li>
             If there is more than one identical &lt;Pattern, Mask&gt; pair, the component Sub-TLV is
@@ -387,8 +510,12 @@
           </li>
           <li>
             If the &lt;Pattern, Mask&gt; pairs are not in a strict ascending order as
-            described in <xref target="dst-bitwise-subtlv-definition"/> and
-            <xref target="src-bitwise-subtlv-definition"/>,
+            described in
+            <xref target="ipv4-dst-bitwise-subtlv-definition"/>,
+            <xref target="ipv6-dst-bitwise-subtlv-definition"/>,
+            <xref target="ipv4-src-bitwise-subtlv-definition"/>,
+            and
+            <xref target="ipv6-src-bitwise-subtlv-definition"/>,
             the component Sub-TLV is considered MALFORMED.
           </li>
         </ul>
@@ -415,7 +542,7 @@
         </t>
         <t>
           However, it is recommended to use only one filter component for a packet header field.
-          See also in <xref target="existing-filter"/>.
+          See also <xref target="existing-filter"/>.
         </t>
       </section>
     </section>
@@ -512,13 +639,15 @@
             For example, FSv2 rule X0 can be modified to match both the most significant M1 bits as
             P1 and the least significant 2 bits as 00 in a single &lt;Pattern, Mask&gt;
             pair since the matching positions indicated by the Mask can be discontiguous as
-            mentioned in <xref target="src-bitwise-subtlv-definition"/>.
+            mentioned in <xref target="ipv4-src-bitwise-subtlv-definition"/> and
+            <xref target="ipv6-src-bitwise-subtlv-definition"/>.
           </t>
           <t>
             FSv2 rule Y0 can be modified to match both the most significant M1 bits as P1 and the
             least significant 2 bits as 00 in a single &lt;Pattern, Mask&gt; pair since
             the matching positions indicated by the Mask can be discontiguous as mentioned in
-            <xref target="dst-bitwise-subtlv-definition"/>.
+            <xref target="ipv4-dst-bitwise-subtlv-definition"/> and 
+            <xref target="ipv6-dst-bitwise-subtlv-definition"/>.
           </t>
           <t>
             The matched traffic is directed to a specific service instance by various mechanisms,
@@ -711,28 +840,40 @@
     <section anchor="IANA" title="IANA Considerations">
       <t>
         IANA is requested to indicate [this document] as a reference on the
-        following assignments in the "BGP FSv2 IP Basic Component Types" registry:
+        following assignments in the "BGP FSv2 Component Types" registry:
       </t>
       <table>
         <thead>
           <tr>
             <th>Type Value</th>
-            <th>IPv4 Name</th>
-            <th>IPv6 Name</th>
+            <th>Filter Family</th>
+            <th>Name</th>
             <th>Reference</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td align="right">TBD1</td>
-            <td align="left">Bitwise Destination IPv4 Address Filter</td>
-            <td align="left">Bitwise Destination IPv6 Address Filter</td>
+            <td align="left">IPv4 Filter Family</td>
+            <td align="left">IPv4 Destination Address Bitwise Filter</td>
             <td align="left">[this document]</td>
           </tr>
           <tr>
             <td align="right">TBD2</td>
-            <td align="left">Bitwise Source IPv4 Address Filter</td>
-            <td align="left">Bitwise Source IPv6 Address Filter</td>
+            <td align="left">IPv6 Basic Filter Family</td>
+            <td align="left">IPv6 Destination Address Bitwise Filter</td>
+            <td align="left">[this document]</td>
+          </tr>
+          <tr>
+            <td align="right">TBD3</td>
+            <td align="left">IPv4 Filter Family</td>
+            <td align="left">IPv4 Source Address Bitwise Filter</td>
+            <td align="left">[this document]</td>
+          </tr>
+          <tr>
+            <td align="right">TBD4</td>
+            <td align="left">IPv6 Basic Filter Family</td>
+            <td align="left">IPv6 Source Address Bitwise Filter</td>
             <td align="left">[this document]</td>
           </tr>
         </tbody>
