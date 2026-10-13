@@ -840,7 +840,7 @@
     <section anchor="IANA" title="IANA Considerations">
       <t>
         IANA is requested to indicate [this document] as a reference on the
-        following assignments in the "BGP FSv2 IP Basic Component Types" registry:
+        following assignments in the "BGP FSv2 Component Types" registry:
       </t>
       <table>
         <thead>
